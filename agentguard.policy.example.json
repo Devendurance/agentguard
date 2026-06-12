@@ -1,0 +1,13 @@
+{
+  "mode": "active",
+  "maxLeverage": 5,
+  "maxOrderUsd": 250,
+  "maxDailyDrawdownPct": 3,
+  "allowedSymbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT"],
+  "failClosed": true,
+  "actions": {
+    "onOversizedOrder": "resize",
+    "onDrawdownBreach": "flatten",
+    "onUnknownRiskState": "block"
+  }
+}
