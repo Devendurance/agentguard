@@ -1,0 +1,25 @@
+agentguard/
+  packages/
+    sdk/
+      src/
+        guard.ts
+        policy.ts
+        risk-engine.ts
+        bitget-wrapper.ts
+        event-logger.ts
+        types.ts
+    demo-agent/
+      src/
+        index.ts
+        scenarios.ts
+  apps/
+    dashboard/
+      src/
+  examples/
+    basic-wrapper/
+    replay-simulation/
+  docs/
+    PRD.md
+    ARCHITECTURE.md
+  agentguard.policy.example.json
+  README.md
