@@ -73,7 +73,19 @@ export function evaluateRisk(
     };
   }
 
-  // Rule 6: oversized order
+  // Rule 6: market-risk checks (only if enabled)
+  if (policy.marketRisk?.enabled) {
+    const marketRiskResult = evaluateMarketRisk(order, marketState, policy.marketRisk);
+    if (marketRiskResult) {
+      return {
+        ...marketRiskResult,
+        originalOrder: order,
+        policySnapshot: policy,
+      };
+    }
+  }
+
+  // Rule 7: oversized order
   if (order.notionalUsd > policy.maxOrderUsd) {
     if (policy.actions.onOversizedOrder === "resize") {
       const modifiedOrder: OrderIntent = {
@@ -99,12 +111,92 @@ export function evaluateRisk(
     }
   }
 
-  // Rule 7: approve - all checks passed
+  // Rule 8: approve - all checks passed
   return {
     action: "approve",
     approved: true,
     reason: "within_policy",
     originalOrder: order,
     policySnapshot: policy,
+  };
+}
+
+/**
+ * Evaluate market-risk rules when policy.marketRisk.enabled is true
+ * Returns a partial GuardDecision if a market-risk rule is violated, or null if all pass
+ */
+function evaluateMarketRisk(
+  order: OrderIntent,
+  marketState: MarketState | undefined,
+  marketRisk: NonNullable<RiskPolicy["marketRisk"]>
+): Omit<GuardDecision, "originalOrder" | "policySnapshot"> | null {
+  const action = marketRisk.actionOnMarketRisk ?? "block";
+  const approved = action === "resize";
+
+  // Check 1: Extreme risk regime
+  if (
+    marketRisk.blockOnExtremeRegime &&
+    marketState?.riskRegime === "extreme"
+  ) {
+    return createMarketRiskDecision(action, approved, "extreme_market_regime", order);
+  }
+
+  // Check 2: Extreme sentiment
+  if (
+    marketRisk.blockOnExtremeSentiment &&
+    (marketState?.sentiment === "extreme_fear" ||
+      marketState?.sentiment === "extreme_greed")
+  ) {
+    return createMarketRiskDecision(action, approved, "extreme_sentiment", order);
+  }
+
+  // Check 3: Funding stress
+  if (
+    marketRisk.maxFundingRateAbs !== undefined &&
+    marketState?.fundingRate !== undefined &&
+    Math.abs(marketState.fundingRate) > marketRisk.maxFundingRateAbs
+  ) {
+    return createMarketRiskDecision(action, approved, "funding_stress", order);
+  }
+
+  // Check 4: Volatility stress
+  if (
+    marketRisk.maxVolatilityPct !== undefined &&
+    marketState?.volatilityPct !== undefined &&
+    marketState.volatilityPct > marketRisk.maxVolatilityPct
+  ) {
+    return createMarketRiskDecision(action, approved, "volatility_stress", order);
+  }
+
+  // All market-risk checks passed
+  return null;
+}
+
+/**
+ * Helper to create a market-risk decision with optional resize logic
+ */
+function createMarketRiskDecision(
+  action: "block" | "resize",
+  approved: boolean,
+  baseReason: string,
+  order: OrderIntent
+): Omit<GuardDecision, "originalOrder" | "policySnapshot"> {
+  if (action === "resize") {
+    // For resize: cap order size to policy max (simplified market-risk resize)
+    const modifiedOrder: OrderIntent = {
+      ...order,
+      notionalUsd: Math.min(order.notionalUsd, 250), // Use a conservative cap
+    };
+    return {
+      action: "resize",
+      approved: true,
+      reason: `${baseReason}_resized`,
+      modifiedOrder,
+    };
+  }
+  return {
+    action: "block",
+    approved: false,
+    reason: baseReason,
   };
 }

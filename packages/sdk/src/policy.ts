@@ -1,4 +1,4 @@
-import { RiskPolicy } from "./types";
+import { RiskPolicy, MarketRiskPolicy } from "./types";
 import { readFile } from "fs/promises";
 
 /**
@@ -75,5 +75,56 @@ export function validatePolicy(policy: RiskPolicy): void {
     throw new Error(
       `Invalid actions.onUnknownRiskState: "${policy.actions.onUnknownRiskState}". Must be "block"`
     );
+  }
+
+  // Validate optional marketRisk configuration
+  if (policy.marketRisk !== undefined) {
+    validateMarketRisk(policy.marketRisk);
+  }
+}
+
+/**
+ * Validate optional MarketRiskPolicy configuration
+ */
+function validateMarketRisk(marketRisk: MarketRiskPolicy): void {
+  if (typeof marketRisk.enabled !== "boolean") {
+    throw new Error("marketRisk.enabled must be a boolean");
+  }
+
+  if (
+    marketRisk.blockOnExtremeRegime !== undefined &&
+    typeof marketRisk.blockOnExtremeRegime !== "boolean"
+  ) {
+    throw new Error("marketRisk.blockOnExtremeRegime must be a boolean if provided");
+  }
+
+  if (
+    marketRisk.blockOnExtremeSentiment !== undefined &&
+    typeof marketRisk.blockOnExtremeSentiment !== "boolean"
+  ) {
+    throw new Error("marketRisk.blockOnExtremeSentiment must be a boolean if provided");
+  }
+
+  if (
+    marketRisk.maxFundingRateAbs !== undefined &&
+    (typeof marketRisk.maxFundingRateAbs !== "number" || marketRisk.maxFundingRateAbs <= 0)
+  ) {
+    throw new Error("marketRisk.maxFundingRateAbs must be a positive number if provided");
+  }
+
+  if (
+    marketRisk.maxVolatilityPct !== undefined &&
+    (typeof marketRisk.maxVolatilityPct !== "number" || marketRisk.maxVolatilityPct <= 0)
+  ) {
+    throw new Error("marketRisk.maxVolatilityPct must be a positive number if provided");
+  }
+
+  if (marketRisk.actionOnMarketRisk !== undefined) {
+    const validActions = ["block", "resize"] as const;
+    if (!validActions.includes(marketRisk.actionOnMarketRisk)) {
+      throw new Error(
+        `Invalid marketRisk.actionOnMarketRisk: "${marketRisk.actionOnMarketRisk}". Must be one of: ${validActions.join(", ")}`
+      );
+    }
   }
 }

@@ -57,7 +57,20 @@ export interface MarketState {
   volatilityPct?: number;
   sentiment?: "positive" | "neutral" | "negative" | "extreme_fear" | "extreme_greed";
   riskRegime?: "normal" | "elevated" | "extreme";
-  source?: "mock" | "bitget-skill-hub" | "manual";
+  source?: "mock" | "bitget-skill-hub" | "manual" | "technical-analysis" | "sentiment-analyst";
+}
+
+/**
+ * Optional market-risk policy configuration
+ * When enabled, AgentGuard evaluates market conditions before approving orders
+ */
+export interface MarketRiskPolicy {
+  enabled: boolean;
+  blockOnExtremeRegime?: boolean;
+  blockOnExtremeSentiment?: boolean;
+  maxFundingRateAbs?: number;
+  maxVolatilityPct?: number;
+  actionOnMarketRisk?: "block" | "resize";
 }
 
 /**
@@ -75,6 +88,7 @@ export interface RiskPolicy {
     onDrawdownBreach: "flatten" | "block";
     onUnknownRiskState: "block";
   };
+  marketRisk?: MarketRiskPolicy;
 }
 
 /**

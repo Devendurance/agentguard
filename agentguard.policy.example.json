@@ -9,5 +9,13 @@
     "onOversizedOrder": "resize",
     "onDrawdownBreach": "flatten",
     "onUnknownRiskState": "block"
+  },
+  "marketRisk": {
+    "enabled": true,
+    "blockOnExtremeRegime": true,
+    "blockOnExtremeSentiment": true,
+    "maxFundingRateAbs": 0.05,
+    "maxVolatilityPct": 8,
+    "actionOnMarketRisk": "block"
   }
 }
