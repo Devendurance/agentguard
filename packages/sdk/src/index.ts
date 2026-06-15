@@ -5,3 +5,4 @@ export * from "./event-logger";
 export * from "./guard";
 export * from "./bitget-wrapper";
 export * from "./adapters";
+export * from "./providers";
