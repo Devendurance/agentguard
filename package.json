@@ -7,7 +7,8 @@
                     "build":  "next build",
                     "start":  "next start",
                     "lint":  "eslint",
-                    "demo:basic":  "ts-node --project tsconfig.agentguard.json examples/basic-wrapper/index.ts"
+                    "demo:basic":  "ts-node --project tsconfig.agentguard.json examples/basic-wrapper/index.ts",
+                    "demo:bitget-dry-run":  "ts-node --project tsconfig.agentguard.json examples/bitget-dry-run/index.ts"
                 },
     "dependencies":  {
                          "@bitget-ai/getagent-skill":  "^0.2.1",
