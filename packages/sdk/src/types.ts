@@ -57,7 +57,7 @@ export interface MarketState {
   volatilityPct?: number;
   sentiment?: "positive" | "neutral" | "negative" | "extreme_fear" | "extreme_greed";
   riskRegime?: "normal" | "elevated" | "extreme";
-  source?: "mock" | "bitget-skill-hub" | "manual" | "technical-analysis" | "sentiment-analyst";
+  source?: "mock" | "bitget-skill-hub" | "manual" | "technical-analysis" | "sentiment-analyst" | "bitget-public-api" | "fallback";
 }
 
 /**

@@ -10,7 +10,9 @@
                     "demo:basic":  "ts-node --project tsconfig.agentguard.json examples/basic-wrapper/index.ts",
                     "demo:bitget-dry-run":  "ts-node --project tsconfig.agentguard.json examples/bitget-dry-run/index.ts",
                     "demo:market-risk":  "ts-node --project tsconfig.agentguard.json examples/market-risk/index.ts",
-                    "demo:skill-hub-state":  "ts-node --project tsconfig.agentguard.json examples/skill-hub-state/index.ts"
+                    "demo:skill-hub-state":  "ts-node --project tsconfig.agentguard.json examples/skill-hub-state/index.ts",
+                    "demo:dashboard-data":  "ts-node --project tsconfig.agentguard.json examples/dashboard-data/index.ts",
+                    "demo:bitget-public-market":  "ts-node --project tsconfig.agentguard.json examples/bitget-public-market/index.ts"
                 },
     "dependencies":  {
                          "@bitget-ai/getagent-skill":  "^0.2.1",
