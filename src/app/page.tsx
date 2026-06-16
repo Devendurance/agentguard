@@ -79,7 +79,7 @@ export default function Home() {
           </ul>
           <div className="flex items-center gap-2">
             <a className="ag-btn ag-btn-secondary hidden sm:inline-flex" href="#github">GitHub</a>
-            <a className="ag-btn ag-btn-primary" href="#demo">Run Demo</a>
+            <a className="ag-btn ag-btn-primary" href="/dashboard">Run Demo</a>
           </div>
         </nav>
       </header>
@@ -100,7 +100,7 @@ export default function Home() {
                 AgentGuard sits between autonomous agents and Bitget execution APIs, blocking unsafe trades before they reach the exchange.
               </p>
               <div className="ag-hero-actions mt-8 flex flex-col gap-3 sm:flex-row">
-                <a className="ag-btn ag-btn-primary ag-btn-lg" href="#demo">Run Demo →</a>
+                <a className="ag-btn ag-btn-primary ag-btn-lg" href="/dashboard">Run Demo →</a>
                 <a className="ag-btn ag-btn-developer ag-btn-lg" href="#github">View GitHub</a>
               </div>
               <ul className="ag-hero-status mt-8 flex flex-wrap gap-x-0 gap-y-3" aria-label="AgentGuard capabilities">
@@ -268,7 +268,7 @@ export default function Home() {
             <div className="ag-panel mt-9 overflow-hidden">
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--ag-border-soft)] px-5 py-4">
                 <div className="flex items-center gap-3"><strong className="ag-mono text-xs text-[var(--ag-text)]">AgentGuard / incident-log</strong><Chip variant="audit">live feed</Chip></div>
-                <a className="ag-btn ag-btn-secondary" href="#demo">Export Log</a>
+                <a className="ag-btn ag-btn-secondary" >Export Log</a>
               </div>
               <div className="overflow-x-auto">
                 <table className="min-w-[900px] w-full border-collapse text-left">
@@ -282,7 +282,7 @@ export default function Home() {
                         {[time, agent, market, action, policy].map((cell) => <td key={cell} className="ag-table-cell">{cell}</td>)}
                         <td className="ag-table-cell"><Chip variant={state}>{decision}</Chip></td>
                         <td className="ag-table-cell">{reason}</td>
-                        <td className="ag-table-cell"><a className="text-[var(--ag-blue)] underline decoration-dotted underline-offset-4" href="#demo">↗ view</a></td>
+                        <td className="ag-table-cell"><a className="text-[var(--ag-blue)] underline decoration-dotted underline-offset-4" >↗ view</a></td>
                       </tr>
                     ))}
                   </tbody>
@@ -336,7 +336,7 @@ result = guard.submit({
             <h2 className="ag-display mx-auto max-w-3xl text-balance text-5xl leading-tight text-[var(--ag-text)] sm:text-6xl">Give your trading agent a hard risk boundary.</h2>
             <p className="mx-auto mt-5 max-w-md text-pretty text-base leading-7 text-[var(--ag-muted)]">Autonomous agents should move fast. They should not execute without limits.</p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <a className="ag-btn ag-btn-primary ag-btn-lg" href="#demo">Run Demo →</a>
+              <a className="ag-btn ag-btn-primary ag-btn-lg" href="/dashboard">Run Demo →</a>
               <a className="ag-btn ag-btn-developer ag-btn-lg" href="#github">View GitHub</a>
             </div>
             <p className="ag-mono mx-auto mt-8 max-w-2xl text-[10px] uppercase text-[var(--ag-muted)]">Agent → AgentGuard checkpoint → Bitget execution API</p>
@@ -358,3 +358,4 @@ result = guard.submit({
     </div>
   );
 }
+
