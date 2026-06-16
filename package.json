@@ -14,7 +14,8 @@
                     "demo:dashboard-data":  "ts-node --project tsconfig.agentguard.json examples/dashboard-data/index.ts",
                     "demo:bitget-public-market":  "ts-node --project tsconfig.agentguard.json examples/bitget-public-market/index.ts",
                     "demo:trading-agent-integration":  "ts-node --project tsconfig.agentguard.json examples/trading-agent-integration/index.ts",
-                    "demo":  "npm run demo:trading-agent-integration"
+                    "demo":  "npm run demo:trading-agent-integration",
+                    "demo:bitget-auth-preflight":  "ts-node --project tsconfig.agentguard.json examples/bitget-auth-preflight/index.ts"
                 },
     "dependencies":  {
                          "@bitget-ai/getagent-skill":  "^0.2.1",
