@@ -1,140 +1,101 @@
 # AgentGuard
 
-AgentGuard is an open-source risk firewall SDK for AI trading agents, enforcing deterministic execution policies before unsafe orders reach Bitget-style trading APIs.
+Risk firewall for autonomous trading agents.
 
-Built for Bitget AI Hackathon � Track 2: Trading Infrastructure
+AgentGuard is a Bitget AI Hackathon Track 2 trading infrastructure project. It is an installable TypeScript SDK that sits between AI trading agents and Bitget-style execution clients, checking every order intent against deterministic risk policy before anything can reach execution.
 
-## Why AgentGuard exists
+## Problem
 
-AI trading agents can hallucinate, over-leverage, oversize positions, ignore drawdown, or keep trading during abnormal regimes. AgentGuard gives developers a hard policy layer before execution.
+Autonomous trading agents can generate unsafe orders: oversized positions, excessive leverage, unsupported symbols, or trades during abnormal market regimes. LLM reasoning is useful for strategy, but it is not a reliable place to enforce hard risk controls.
 
-Let your AI agent think, but never let it execute outside your risk policy.
+Developers need infrastructure that makes risk rules deterministic, auditable, and impossible for an agent prompt to bypass.
 
-## What it does
+## Solution
 
-- Intercepts order intents before execution
-- Evaluates orders against a configurable risk policy
-- Approves safe trades
-- Resizes oversized trades
-- Blocks unsafe trades
-- Supports flat / pause style decisions
-- Logs every decision as an auditable event
-- Wraps any Bitget-shaped execution client
+AgentGuard wraps an execution client with a policy engine. The agent can still generate trade intent, but AgentGuard decides whether the order is approved, resized, blocked, flattened, or paused before the execution layer receives it.
 
-## Current MVP status
+The SDK is packable as `@agentguard/sdk` for local installation and demo review.
 
-This MVP currently uses a local mock Bitget-shaped execution client to prove the middleware and policy engine safely.
+## How It Works
 
-- No real API keys are required.
-- No live trades are placed.
-- The execution client abstraction is designed so Bitget Agent Hub, Bitget MCP, or a real Bitget API client can be plugged in next.
+```text
+AI agent
+  -> OrderIntent
+  -> AgentGuard policy check
+  -> approve / resize / block / flatten / pause
+  -> dry-run or gated execution adapter
+  -> audit event log
+```
+
+AgentGuard currently supports:
+
+- Policy loading and validation
+- Deterministic risk evaluation
+- Fail-closed behavior when risk state is unknown
+- Market-risk rules from normalized market state
+- Event logging for audit and dashboard data
+- Bitget-shaped dry-run adapter
+- Read-only Bitget public market data provider
+- Optional read-only paper auth probe
+
+## What Is Real Today
+
+- SDK core works.
+- Policy loading and validation work.
+- Risk engine works.
+- Event logging works.
+- Bitget dry-run adapter works.
+- Market-risk rules work.
+- Bitget public read-only market data provider works.
+- Trading agent integration demo works.
+- Dashboard data generation works.
+- SDK packaging works through `@agentguard/sdk`.
+- Paper read-only account probe is available as an optional credential check.
+
+No live trading is implemented. Paper order placement is not enabled by default.
 
 ## Quickstart
 
 ```bash
-cd agentguard
 npm install
-npm run demo:basic
+npm run demo:judge
+npm run sdk:pack
 ```
 
-If dependencies are already installed, `npm install` may not be needed.
+`demo:judge` does not require private Bitget API keys. It runs the main trading-agent dry-run demo, regenerates dashboard sample data, and builds the SDK.
 
-## Demo output
+The SDK pack command creates:
 
-The basic-wrapper demo runs 4 scenarios:
-
-1. BTCUSDT buy $180 3x ? approve ? forwarded
-2. SOLUSDT buy $800 4x ? resize to $250 ? forwarded
-3. ETHUSDT buy $200 20x ? block ? max_leverage_exceeded
-4. DOGEUSDT buy $100 2x ? block ? symbol_not_allowed
-
-The event log records all 4 decisions with timestamps, actions, and reasons.
-
-## Policy example
-
-```json
-{
-  "mode": "active",
-  "maxLeverage": 5,
-  "maxOrderUsd": 250,
-  "maxDailyDrawdownPct": 3,
-  "allowedSymbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT"],
-  "failClosed": true,
-  "actions": {
-    "onOversizedOrder": "resize",
-    "onDrawdownBreach": "flatten",
-    "onUnknownRiskState": "block"
-  }
-}
+```text
+agentguard-sdk-0.1.0.tgz
 ```
 
-## SDK usage
+Install the packed SDK in another project with:
 
-```typescript
-import {
-  AgentGuard,
-  createAgentGuardedClient,
-  loadPolicy
-} from "./packages/sdk/src";
-
-const policy = await loadPolicy("./agentguard.policy.example.json");
-const guard = new AgentGuard({ policy });
-
-const guardedBitget = createAgentGuardedClient(
-  bitgetClient,
-  guard,
-  () => accountState,
-  (order) => marketState
-);
-
-await guardedBitget.placeOrder(order);
+```bash
+npm install ./agentguard-sdk-0.1.0.tgz
 ```
 
-## Architecture
+## Optional Paper Auth
 
-```
-AI Agent
-  ? Order Intent
-  ? AgentGuard
-  ? Policy Engine
-  ? approve / resize / block / flatten / pause
-  ? Execution Client if allowed
-  ? Event Log
+```bash
+npm run demo:paper-auth
 ```
 
-## Project structure
+This optional probe requires Bitget Demo API keys and paper env flags. It calls a read-only paper account endpoint with `paptrading: 1`, prints only safe metadata, and does not place orders.
 
-```
-agentguard/
-  packages/sdk/src/
-    types.ts
-    policy.ts
-    risk-engine.ts
-    event-logger.ts
-    guard.ts
-    bitget-wrapper.ts
-    index.ts
-  examples/basic-wrapper/
-    index.ts
-  agentguard.policy.example.json
-  package.json
-  tsconfig.json
-  README.md
-```
+## Safety Guarantees
 
-## Why this is Track 2 infrastructure
+- Judge demo does not require private keys.
+- Dry-run execution does not send Bitget orders.
+- Blocked orders do not reach execution.
+- Live trading is not implemented.
+- Paper order placement is not enabled by default.
+- Secrets are not printed by paper auth diagnostics.
+- `.env` files should never be committed.
 
-AgentGuard is not a trading strategy. It is reusable infrastructure that other AI trading agent developers can wrap around their own execution flows with low friction.
+## Track 2 Relevance
 
-## Next integrations
+AgentGuard is trading infrastructure, not a trading strategy. It gives AI trading developers a reusable middleware layer for policy enforcement, exchange adapter safety, audit logs, dashboard evidence, and future paper/live execution gates.
 
-- Bitget Agent Hub execution adapter
-- Bitget MCP adapter
-- Bitget Skill Hub sentiment-analyst market risk input
-- Bitget Skill Hub technical-analysis volatility input
-- Replay simulator
-- Next.js + Tailwind dashboard for event visualization
-
-## Safety note
-
-The current demo does not place live trades. Use testnet, sandbox, or mock execution until policies and integration are fully audited.
+The core value is preventing unsafe autonomous execution before it reaches Bitget-style trading APIs.
