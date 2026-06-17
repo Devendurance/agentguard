@@ -21,6 +21,7 @@
 - [ ] `/dashboard` route exists.
 - [ ] Dashboard reads `data/agentguard-dashboard-sample.json`.
 - [ ] `npm run demo:dashboard-data` refreshes sample metrics and events.
+- [ ] Dashboard displays `data/agentguard-paper-order-record.json` when the verifiable usage record exists.
 
 ## Safety
 
@@ -44,4 +45,6 @@
 - [ ] Intentional execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
 - [ ] `BTCUSDT` 3 USDT market buy is the only allowed paper order intent.
 - [ ] Unsafe `ETHUSDT` 20x order is blocked before execution.
+- [ ] `data/agentguard-paper-order-record.json` is generated as the verifiable usage record.
+- [ ] The usage record contains no secrets, signed headers, or raw credentials.
 - [ ] Bitget `43012 Insufficient balance` is documented as proof that the signed request reached the demo endpoint but the paper spot account lacked enough USDT.

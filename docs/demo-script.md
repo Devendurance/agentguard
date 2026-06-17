@@ -6,7 +6,8 @@
 2. Run the judge demo.
 3. Point out approved, resized, and blocked decisions.
 4. Show that blocked orders never reach execution.
-5. Mention dashboard sample data and SDK packaging.
+5. Open `/dashboard` as the audit viewer for sample decisions and the paper-order usage record.
+6. Mention SDK packaging.
 
 ## Commands
 
@@ -65,11 +66,15 @@ AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-order-guarded
 - AgentGuard approves the safe `BTCUSDT` 3 USDT market buy intent.
 - The paper client refuses to send unless `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
 - AgentGuard blocks the unsafe `ETHUSDT` 200 USDT 20x order before it reaches the paper client.
+- A sanitized verifiable usage record is written to `data/agentguard-paper-order-record.json`.
 - If intentional execution returns Bitget `43012 Insufficient balance`, the signed paper order request still reached the Bitget demo endpoint; the demo spot account needs paper USDT or a lower allowed size for a full fill.
+- If intentional execution returns `code: 00000` with `orderId` or `clientOid`, the demo performs a read-only `GET /api/v2/spot/trade/orderInfo` query and prints sanitized proof fields: `code`, `msg`, `orderId`, `clientOid`, `symbol`, `side`, `orderType`, and `status`.
 
 ## Dashboard Mention
 
 The dashboard is available at `/dashboard` in the Next.js app and reads generated sample data from `data/agentguard-dashboard-sample.json`.
+
+It also reads `data/agentguard-paper-order-record.json` when present and displays it in the "Verifiable Usage Record" section as an audit viewer.
 
 Use `npm run demo:dashboard-data` directly if you only want to refresh dashboard data.
 

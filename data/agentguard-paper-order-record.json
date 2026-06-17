@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-06-17T21:05:37.011Z",
+  "mode": "paper",
+  "endpoint": "/api/v2/spot/trade/place-order",
+  "safeOrder": {
+    "input": {
+      "symbol": "BTCUSDT",
+      "side": "buy",
+      "orderType": "market",
+      "notionalUsd": 3,
+      "leverage": 2
+    },
+    "decision": "approve",
+    "reason": "within_policy",
+    "forwardedToPaperClient": true,
+    "paperResult": {
+      "status": "paper_order_not_sent_safety_gate"
+    }
+  },
+  "unsafeOrder": {
+    "input": {
+      "symbol": "ETHUSDT",
+      "side": "buy",
+      "orderType": "market",
+      "notionalUsd": 200,
+      "leverage": 20
+    },
+    "decision": "block",
+    "reason": "max_leverage_exceeded",
+    "unsafeForwardedToPaperClient": false
+  },
+  "safetyNotes": [
+    "No live trading is implemented.",
+    "No secrets or signed headers are written to this record.",
+    "No cancel, close, leverage, transfer, or withdraw endpoints are used.",
+    "Default run does not send a paper order unless AGENTGUARD_EXECUTE_PAPER_ORDER=true."
+  ]
+}

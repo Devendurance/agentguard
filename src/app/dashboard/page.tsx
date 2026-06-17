@@ -54,10 +54,58 @@ interface DashboardDataset {
   };
 }
 
+interface PaperOrderRecord {
+  generatedAt: string;
+  mode: "paper";
+  endpoint: string;
+  safeOrder: {
+    input: {
+      symbol: string;
+      side: string;
+      orderType: string;
+      notionalUsd: number;
+      leverage: number;
+    };
+    decision: string;
+    reason: string;
+    forwardedToPaperClient: boolean;
+    paperResult?: {
+      status?: string;
+      code?: string;
+      msg?: string;
+      orderId?: string;
+      clientOid?: string;
+    };
+  };
+  unsafeOrder: {
+    input: {
+      symbol: string;
+      side: string;
+      orderType: string;
+      notionalUsd: number;
+      leverage: number;
+    };
+    decision: string;
+    reason: string;
+    unsafeForwardedToPaperClient: false;
+  };
+  safetyNotes: string[];
+}
+
 async function loadDashboardData(): Promise<DashboardDataset> {
   const filePath = join(process.cwd(), "data", "agentguard-dashboard-sample.json");
   const content = await readFile(filePath, "utf-8");
   return JSON.parse(content) as DashboardDataset;
+}
+
+async function loadPaperOrderRecord(): Promise<PaperOrderRecord | null> {
+  try {
+    const filePath = join(process.cwd(), "data", "agentguard-paper-order-record.json");
+    const content = await readFile(filePath, "utf-8");
+    return JSON.parse(content) as PaperOrderRecord;
+  } catch {
+    return null;
+  }
 }
 
 function SeverityBadge({ severity }: { severity: string }) {
@@ -87,6 +135,7 @@ function MetricCard({ label, value, hint }: { label: string; value: string | num
 
 export default async function DashboardPage() {
   const data = await loadDashboardData();
+  const paperOrderRecord = await loadPaperOrderRecord();
   const { metrics, events, policy } = data;
 
   return (
@@ -125,6 +174,80 @@ export default async function DashboardPage() {
             />
           </div>
         </section>
+
+        {/* Verifiable Usage Record */}
+        {paperOrderRecord && (
+          <section className="mb-8">
+            <h2 className="mb-4 text-sm font-medium text-[var(--ag-muted)]">Verifiable Usage Record</h2>
+            <div className="rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-panel)] p-5">
+              <div className="mb-5 grid gap-3 sm:grid-cols-3">
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-muted)]">Generated</p>
+                  <p className="mt-1 text-xs font-mono">{new Date(paperOrderRecord.generatedAt).toLocaleString()}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-muted)]">Mode</p>
+                  <p className="mt-1 text-xs font-mono">{paperOrderRecord.mode}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-muted)]">Endpoint</p>
+                  <p className="mt-1 text-xs font-mono">{paperOrderRecord.endpoint}</p>
+                </div>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <div className="rounded-lg border border-[rgba(74,222,128,.24)] bg-[rgba(74,222,128,.06)] p-4">
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-green)]">Approved BTC Order</p>
+                  <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                    <dt className="text-[var(--ag-muted)]">Intent</dt>
+                    <dd className="font-mono">{paperOrderRecord.safeOrder.input.symbol} {paperOrderRecord.safeOrder.input.side} {paperOrderRecord.safeOrder.input.orderType}</dd>
+                    <dt className="text-[var(--ag-muted)]">Size</dt>
+                    <dd className="font-mono">${paperOrderRecord.safeOrder.input.notionalUsd} at {paperOrderRecord.safeOrder.input.leverage}x</dd>
+                    <dt className="text-[var(--ag-muted)]">Decision</dt>
+                    <dd className="font-mono">{paperOrderRecord.safeOrder.decision}</dd>
+                    <dt className="text-[var(--ag-muted)]">Reason</dt>
+                    <dd className="font-mono">{paperOrderRecord.safeOrder.reason}</dd>
+                    <dt className="text-[var(--ag-muted)]">Forwarded</dt>
+                    <dd className="font-mono">{String(paperOrderRecord.safeOrder.forwardedToPaperClient)}</dd>
+                    <dt className="text-[var(--ag-muted)]">Code</dt>
+                    <dd className="font-mono">{paperOrderRecord.safeOrder.paperResult?.code || "-"}</dd>
+                    <dt className="text-[var(--ag-muted)]">Message</dt>
+                    <dd className="font-mono">{paperOrderRecord.safeOrder.paperResult?.msg || "-"}</dd>
+                    <dt className="text-[var(--ag-muted)]">Order ID</dt>
+                    <dd className="break-all font-mono">{paperOrderRecord.safeOrder.paperResult?.orderId || "-"}</dd>
+                    <dt className="text-[var(--ag-muted)]">Client OID</dt>
+                    <dd className="break-all font-mono">{paperOrderRecord.safeOrder.paperResult?.clientOid || "-"}</dd>
+                  </dl>
+                </div>
+
+                <div className="rounded-lg border border-[rgba(244,63,94,.24)] bg-[rgba(244,63,94,.06)] p-4">
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-red)]">Blocked ETH Order</p>
+                  <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                    <dt className="text-[var(--ag-muted)]">Intent</dt>
+                    <dd className="font-mono">{paperOrderRecord.unsafeOrder.input.symbol} {paperOrderRecord.unsafeOrder.input.side} {paperOrderRecord.unsafeOrder.input.orderType}</dd>
+                    <dt className="text-[var(--ag-muted)]">Size</dt>
+                    <dd className="font-mono">${paperOrderRecord.unsafeOrder.input.notionalUsd} at {paperOrderRecord.unsafeOrder.input.leverage}x</dd>
+                    <dt className="text-[var(--ag-muted)]">Decision</dt>
+                    <dd className="font-mono">{paperOrderRecord.unsafeOrder.decision}</dd>
+                    <dt className="text-[var(--ag-muted)]">Reason</dt>
+                    <dd className="font-mono">{paperOrderRecord.unsafeOrder.reason}</dd>
+                    <dt className="text-[var(--ag-muted)]">Forwarded</dt>
+                    <dd className="font-mono">{String(paperOrderRecord.unsafeOrder.unsafeForwardedToPaperClient)}</dd>
+                  </dl>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-raised)] p-4">
+                <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-muted)]">Safety Notes</p>
+                <ul className="mt-2 space-y-2 text-xs text-[var(--ag-muted)]">
+                  {paperOrderRecord.safetyNotes.map((note) => (
+                    <li key={note}>{note}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Event Stream */}
         <section className="mb-8">
