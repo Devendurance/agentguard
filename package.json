@@ -1,41 +1,44 @@
 {
-    "name":  "bitgetai-hackathon",
-    "version":  "0.1.0",
-    "private":  true,
-    "scripts":  {
-                    "dev":  "next dev",
-                    "build":  "next build",
-                    "start":  "next start",
-                    "lint":  "eslint",
-                    "demo:basic":  "ts-node --project tsconfig.agentguard.json examples/basic-wrapper/index.ts",
-                    "demo:bitget-dry-run":  "ts-node --project tsconfig.agentguard.json examples/bitget-dry-run/index.ts",
-                    "demo:market-risk":  "ts-node --project tsconfig.agentguard.json examples/market-risk/index.ts",
-                    "demo:skill-hub-state":  "ts-node --project tsconfig.agentguard.json examples/skill-hub-state/index.ts",
-                    "demo:dashboard-data":  "ts-node --project tsconfig.agentguard.json examples/dashboard-data/index.ts",
-                    "demo:bitget-public-market":  "ts-node --project tsconfig.agentguard.json examples/bitget-public-market/index.ts",
-                    "demo:trading-agent-integration":  "ts-node --project tsconfig.agentguard.json examples/trading-agent-integration/index.ts",
-                    "demo":  "npm run demo:trading-agent-integration",
-                    "demo:bitget-auth-preflight":  "ts-node --project tsconfig.agentguard.json examples/bitget-auth-preflight/index.ts"
-                },
-    "dependencies":  {
-                         "@bitget-ai/getagent-skill":  "^0.2.1",
-                         "gsap":  "^3.15.0",
-                         "next":  "16.2.7",
-                         "react":  "19.2.4",
-                         "react-dom":  "19.2.4"
-                     },
-    "devDependencies":  {
-                            "@tailwindcss/postcss":  "^4",
-                            "@types/node":  "^20",
-                            "@types/react":  "^19",
-                            "@types/react-dom":  "^19",
-                            "eslint":  "^9",
-                            "eslint-config-next":  "16.2.7",
-                            "tailwindcss":  "^4",
-                            "ts-node":  "^10.9.2",
-                            "typescript":  "^5"
-                        },
-    "ts-node":  {
-                    "compilerOptions":  null
-                }
+    "name": "bitgetai-hackathon",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "eslint",
+        "demo:basic": "ts-node --project tsconfig.agentguard.json examples/basic-wrapper/index.ts",
+        "demo:bitget-dry-run": "ts-node --project tsconfig.agentguard.json examples/bitget-dry-run/index.ts",
+        "demo:market-risk": "ts-node --project tsconfig.agentguard.json examples/market-risk/index.ts",
+        "demo:skill-hub-state": "ts-node --project tsconfig.agentguard.json examples/skill-hub-state/index.ts",
+        "demo:dashboard-data": "ts-node --project tsconfig.agentguard.json examples/dashboard-data/index.ts",
+        "demo:bitget-public-market": "ts-node --project tsconfig.agentguard.json examples/bitget-public-market/index.ts",
+        "demo:trading-agent-integration": "ts-node --project tsconfig.agentguard.json examples/trading-agent-integration/index.ts",
+        "demo": "npm run demo:trading-agent-integration",
+        "demo:bitget-auth-preflight": "ts-node --project tsconfig.agentguard.json examples/bitget-auth-preflight/index.ts",
+        "demo:bitget-env-doctor": "ts-node --project tsconfig.agentguard.json examples/bitget-env-doctor/index.ts",
+        "demo:bitget-paper-account-probe": "ts-node --project tsconfig.agentguard.json examples/bitget-paper-account-probe/index.ts",
+        "demo:bitget-paper-connectivity": "ts-node --project tsconfig.agentguard.json examples/bitget-paper-connectivity/index.ts"
+    },
+    "dependencies": {
+        "@bitget-ai/getagent-skill": "^0.2.1",
+        "gsap": "^3.15.0",
+        "next": "16.2.7",
+        "react": "19.2.4",
+        "react-dom": "19.2.4"
+    },
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-config-next": "16.2.7",
+        "tailwindcss": "^4",
+        "ts-node": "^10.9.2",
+        "typescript": "^5"
+    },
+    "ts-node": {
+        "compilerOptions": null
+    }
 }

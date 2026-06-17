@@ -8,39 +8,22 @@
  * Format a boolean status for display
  */
 function boolStatus(value: boolean): string {
-  return value ? "✓ yes" : "✗ no";
+  return value ? "yes" : "no";
 }
 
 /**
  * Print a safe environment status table (booleans only, no secret values)
  */
-function printEnvStatus(status: BitgetAuthEnvStatus): void {
+function printEnvStatus(env: NodeJS.ProcessEnv): void {
   console.log("=== Bitget Auth Environment Status ===\n");
   console.log("Credentials (presence only, values never shown):");
-  console.log(`  BITGET_API_KEY:      ${boolStatus(status.hasApiKey)}`);
-  console.log(`  BITGET_SECRET_KEY:   ${boolStatus(status.hasSecretKey)}`);
-  console.log(`  BITGET_PASSPHRASE:   ${boolStatus(status.hasPassphrase)}`);
-  
-  if (status.bitgetMode) {
-    console.log(`\nBITGET_MODE: ${status.bitgetMode}`);
-  }
-  
-  console.log("\nSafety flags:");
-  console.log(`  Paper trading explicitly enabled: ${boolStatus(status.paperTradingExplicitlyEnabled)}`);
-  console.log(`  Live trading explicitly enabled:  ${boolStatus(status.liveTradingExplicitlyEnabled)}`);
-  
-  console.log("\nCapability checks:");
-  console.log(`  Can use paper trading: ${boolStatus(status.canUsePaperTrading)}`);
-  console.log(`  Can use live trading:  ${boolStatus(status.canUseLiveTrading)}`);
-  
-  if (status.missing.length > 0) {
-    console.log(`\nMissing required vars: ${status.missing.join(", ")}`);
-  }
-  
-  if (status.warnings.length > 0) {
-    console.log("\nWarnings:");
-    status.warnings.forEach((w) => console.log(`  • ${w}`));
-  }
+  console.log(`  BITGET_API_KEY:                ${boolStatus(!!env.BITGET_API_KEY)}`);
+  console.log(`  BITGET_SECRET_KEY or BITGET_API_SECRET: ${boolStatus(!!env.BITGET_SECRET_KEY || !!env.BITGET_API_SECRET)}`);
+  console.log(`  BITGET_PASSPHRASE:             ${boolStatus(!!env.BITGET_PASSPHRASE)}`);
+  console.log(`  BITGET_MODE=paper:             ${boolStatus(env.BITGET_MODE === "paper")}`);
+  console.log(`  BITGET_PAPER_TRADING=true:     ${boolStatus(env.BITGET_PAPER_TRADING === "true")}`);
+  console.log(`  AGENTGUARD_ALLOW_PAPER_TRADING=true: ${boolStatus(env.AGENTGUARD_ALLOW_PAPER_TRADING === "true")}`);
+  console.log(`  AGENTGUARD_ALLOW_LIVE_TRADING=true:  ${boolStatus(env.AGENTGUARD_ALLOW_LIVE_TRADING === "true")}`);
   console.log();
 }
 
@@ -52,9 +35,11 @@ async function main() {
   console.log("This demo checks environment readiness for paper trading.\n");
   console.log("Safety: No secret values are printed. No HTTP requests are made.\n");
 
+  // Print environment status (booleans only)
+  printEnvStatus(process.env);
+
   // Inspect environment (safe, no secrets printed)
   const status = inspectBitgetAuthEnv();
-  printEnvStatus(status);
 
   // Try to assert paper trading capability
   console.log("=== Preflight Check ===");
@@ -72,12 +57,11 @@ async function main() {
     console.log("   export BITGET_API_KEY=<your-demo-key>");
     console.log("   export BITGET_SECRET_KEY=<your-demo-secret>");
     console.log("   export BITGET_PASSPHRASE=<your-demo-passphrase>");
-    console.log("3. Enable paper trading safety flag (set ONE of):");
-    console.log("   export BITGET_MODE=paper");
-    console.log("   OR");
-    console.log("   export BITGET_PAPER_TRADING=true");
-    console.log("   OR");
-    console.log("   export AGENTGUARD_ALLOW_PAPER_TRADING=true");
+    console.log("3. Enable paper trading safety flags (set ALL):");
+    console.log("   Set ALL:");
+    console.log("   BITGET_MODE=paper");
+    console.log("   BITGET_PAPER_TRADING=true");
+    console.log("   AGENTGUARD_ALLOW_PAPER_TRADING=true");
     console.log("\nReminder: Never use live trading API keys for paper demos.");
     console.log("See: docs/bitget-paper-trading-safety.md\n");
   }

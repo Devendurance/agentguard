@@ -8,13 +8,13 @@
 export interface BitgetAuthEnvStatus {
   /** Whether BITGET_API_KEY is present (boolean only, never value) */
   hasApiKey: boolean;
-  /** Whether BITGET_SECRET_KEY is present (boolean only, never value) */
+  /** Whether BITGET_SECRET_KEY or BITGET_API_SECRET is present (boolean only, never value) */
   hasSecretKey: boolean;
   /** Whether BITGET_PASSPHRASE is present (boolean only, never value) */
   hasPassphrase: boolean;
   /** Value of BITGET_MODE if set */
   bitgetMode?: string;
-  /** Whether paper trading is explicitly enabled via any of the required flags */
+  /** Whether paper trading is explicitly enabled via ALL required flags */
   paperTradingExplicitlyEnabled: boolean;
   /** Whether live trading is explicitly enabled (always false in Phase 5D) */
   liveTradingExplicitlyEnabled: boolean;
@@ -36,14 +36,15 @@ export interface BitgetAuthEnvStatus {
  */
 export function inspectBitgetAuthEnv(env: NodeJS.ProcessEnv = process.env): BitgetAuthEnvStatus {
   const hasApiKey = !!env.BITGET_API_KEY;
-  const hasSecretKey = !!env.BITGET_SECRET_KEY;
+  // Support both secret env names safely: prefer BITGET_SECRET_KEY as canonical, accept BITGET_API_SECRET as alias
+  const hasSecretKey = !!env.BITGET_SECRET_KEY || !!env.BITGET_API_SECRET;
   const hasPassphrase = !!env.BITGET_PASSPHRASE;
   const bitgetMode = env.BITGET_MODE;
   
-  // Paper trading explicitly enabled if ANY of these flags is "true"
+  // Paper trading explicitly enabled only if ALL three flags are true
   const paperTradingExplicitlyEnabled = 
-    bitgetMode === "paper" ||
-    env.BITGET_PAPER_TRADING === "true" ||
+    bitgetMode === "paper" &&
+    env.BITGET_PAPER_TRADING === "true" &&
     env.AGENTGUARD_ALLOW_PAPER_TRADING === "true";
   
   // Live trading explicitly enabled only via AGENTGUARD_ALLOW_LIVE_TRADING
@@ -63,18 +64,18 @@ export function inspectBitgetAuthEnv(env: NodeJS.ProcessEnv = process.env): Bitg
   }
   
   if (paperTradingExplicitlyEnabled) {
-    warnings.push("Paper trading requires Demo API keys from Bitget Demo mode.");
+    warnings.push("Paper trading requires Bitget Demo API keys.");
   }
   
   if (hasApiKey || hasSecretKey || hasPassphrase) {
     warnings.push("Do not use live API keys for paper trading.");
   }
   
-  if ((hasApiKey && hasSecretKey && hasPassphrase) && !paperTradingExplicitlyEnabled) {
-    warnings.push("Missing required paper trading safety flags.");
+  if (!paperTradingExplicitlyEnabled && (hasApiKey && hasSecretKey && hasPassphrase)) {
+    warnings.push("All paper trading safety flags must be enabled together.");
   }
   
-  // canUsePaperTrading: all credentials present + paper flags enabled + live NOT enabled
+  // canUsePaperTrading: all credentials present + ALL paper flags enabled + live NOT enabled
   const canUsePaperTrading = 
     hasApiKey && hasSecretKey && hasPassphrase && 
     paperTradingExplicitlyEnabled && 
@@ -116,7 +117,7 @@ export function assertCanUsePaperTrading(env: NodeJS.ProcessEnv = process.env): 
     
     if (!status.paperTradingExplicitlyEnabled) {
       issues.push(
-        "Paper trading safety flags not set. Set ONE of:\n" +
+        "Set ALL required paper trading safety flags:\n" +
         "  BITGET_MODE=paper\n" +
         "  BITGET_PAPER_TRADING=true\n" +
         "  AGENTGUARD_ALLOW_PAPER_TRADING=true"
