@@ -1,6 +1,6 @@
 # Verifiable Usage Record
 
-AgentGuard writes a sanitized paper-order usage record when the guarded paper order demo runs:
+AgentGuard writes sanitized paper-order usage records when the guarded paper order demo runs:
 
 ```bash
 npm run demo:paper-order-guarded
@@ -9,12 +9,12 @@ npm run demo:paper-order-guarded
 The record is written to:
 
 ```text
-data/agentguard-paper-order-record.json
+data/agentguard-paper-order-records.json
 ```
 
 ## What The Record Shows
 
-The safe order intent is a `BTCUSDT` market buy for 3 USDT at 2x leverage. AgentGuard evaluates the intent first. In the default run, the order reaches the paper client scaffold but is not sent because `AGENTGUARD_EXECUTE_PAPER_ORDER=true` is not set.
+The safe order intent is a `BTCUSDT` market buy for 3 USDT at 2x leverage. AgentGuard evaluates the intent first. In the default run, the order reaches the paper client scaffold but is not sent because `AGENTGUARD_EXECUTE_PAPER_ORDER=true` is not set. Every run appends a new sanitized record to the local JSON array without deleting previous entries.
 
 Intentional paper execution is opt-in:
 
@@ -37,6 +37,8 @@ The dashboard shows:
 - Sanitized Bitget paper response fields: `code`, `msg`, `orderId`, and `clientOid`.
 - Blocked ETH order intent and AgentGuard reason.
 - Safety notes.
+
+Refreshing `/dashboard` reloads the saved local records from `data/agentguard-paper-order-records.json`.
 
 ## Safety
 

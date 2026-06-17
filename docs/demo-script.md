@@ -74,7 +74,7 @@ AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-order-guarded
 
 The dashboard is available at `/dashboard` in the Next.js app and reads generated sample data from `data/agentguard-dashboard-sample.json`.
 
-It also reads `data/agentguard-paper-order-record.json` when present and displays it in the "Verifiable Usage Record" section as an audit viewer.
+It also reads the append-only `data/agentguard-paper-order-records.json` file when present and displays it in the "Verifiable Usage Records" section as an audit viewer. Refreshing `/dashboard` reloads the saved local records.
 
 Use `npm run demo:dashboard-data` directly if you only want to refresh dashboard data.
 
