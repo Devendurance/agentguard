@@ -1,0 +1,99 @@
+{
+  "generatedAt": "2026-06-16T17:23:30.483Z",
+  "metrics": {
+    "ordersEvaluated": 5,
+    "approved": 1,
+    "resized": 1,
+    "blocked": 3,
+    "flattened": 0,
+    "paused": 0,
+    "marketRiskBlocks": 2,
+    "forwardedToExecution": 2,
+    "blockedBeforeExecution": 3,
+    "approvalRatePct": 40,
+    "currentRiskMode": "active",
+    "policyHealth": "warning"
+  },
+  "events": [
+    {
+      "id": "risk_evt_1781630610478_2v6pgn",
+      "timestamp": "2026-06-16T17:23:30.478Z",
+      "symbol": "BTCUSDT",
+      "action": "approve",
+      "reason": "within_policy",
+      "severity": "safe",
+      "notionalUsd": 180,
+      "leverage": 3,
+      "source": "mock"
+    },
+    {
+      "id": "risk_evt_1781630610481_zk9dfe",
+      "timestamp": "2026-06-16T17:23:30.481Z",
+      "symbol": "SOLUSDT",
+      "action": "resize",
+      "reason": "max_order_size_exceeded_resized",
+      "severity": "warning",
+      "notionalUsd": 800,
+      "leverage": 4,
+      "source": "mock"
+    },
+    {
+      "id": "risk_evt_1781630610481_ffwavh",
+      "timestamp": "2026-06-16T17:23:30.481Z",
+      "symbol": "ETHUSDT",
+      "action": "block",
+      "reason": "max_leverage_exceeded",
+      "severity": "danger",
+      "notionalUsd": 200,
+      "leverage": 20,
+      "source": "mock"
+    },
+    {
+      "id": "risk_evt_1781630610482_2xj05o",
+      "timestamp": "2026-06-16T17:23:30.482Z",
+      "symbol": "BTCUSDT",
+      "action": "block",
+      "reason": "volatility_stress",
+      "severity": "danger",
+      "notionalUsd": 180,
+      "leverage": 3,
+      "source": "technical-analysis"
+    },
+    {
+      "id": "risk_evt_1781630610482_8h7jdy",
+      "timestamp": "2026-06-16T17:23:30.482Z",
+      "symbol": "SOLUSDT",
+      "action": "block",
+      "reason": "extreme_sentiment",
+      "severity": "danger",
+      "notionalUsd": 180,
+      "leverage": 3,
+      "source": "sentiment-analyst"
+    }
+  ],
+  "policy": {
+    "mode": "active",
+    "maxLeverage": 5,
+    "maxOrderUsd": 250,
+    "maxDailyDrawdownPct": 3,
+    "allowedSymbols": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "failClosed": true,
+    "actions": {
+      "onOversizedOrder": "resize",
+      "onDrawdownBreach": "flatten",
+      "onUnknownRiskState": "block"
+    },
+    "marketRisk": {
+      "enabled": true,
+      "blockOnExtremeRegime": true,
+      "blockOnExtremeSentiment": true,
+      "maxFundingRateAbs": 0.05,
+      "maxVolatilityPct": 8,
+      "actionOnMarketRisk": "block"
+    }
+  }
+}
