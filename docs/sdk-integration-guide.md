@@ -6,6 +6,26 @@ This guide shows how to integrate AgentGuard into a trading agent or AI system.
 
 ---
 
+## Judge Quickstart
+
+```bash
+npm install
+npm run demo:judge
+npm run sdk:pack
+```
+
+`demo:judge` does not require private Bitget API keys. It runs the trading-agent dry-run demo, regenerates sample dashboard data, and builds the SDK package.
+
+Paper authentication is optional:
+
+```bash
+npm run demo:paper-auth
+```
+
+The paper auth probe requires Bitget Demo API keys and all paper env flags. It is read-only and does not place orders.
+
+---
+
 ## 1. Install / Setup
 
 ### Local development (current)
