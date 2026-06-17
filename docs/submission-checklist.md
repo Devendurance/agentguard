@@ -37,3 +37,11 @@
 - [ ] Paper auth requires Bitget Demo API keys.
 - [ ] Paper auth requires paper env flags.
 - [ ] Paper auth is read-only and does not place orders.
+
+## Optional Guarded Paper Order
+
+- [ ] `npm run demo:paper-order-guarded` is safe by default and sends no order.
+- [ ] Intentional execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
+- [ ] `BTCUSDT` 3 USDT market buy is the only allowed paper order intent.
+- [ ] Unsafe `ETHUSDT` 20x order is blocked before execution.
+- [ ] Bitget `43012 Insufficient balance` is documented as proof that the signed request reached the demo endpoint but the paper spot account lacked enough USDT.

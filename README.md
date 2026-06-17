@@ -51,6 +51,7 @@ AgentGuard currently supports:
 - Dashboard data generation works.
 - SDK packaging works through `@agentguard/sdk`.
 - Paper read-only account probe is available as an optional credential check.
+- Guarded paper order demo is available and safe by default.
 
 No live trading is implemented. Paper order placement is not enabled by default.
 
@@ -84,6 +85,22 @@ npm run demo:paper-auth
 
 This optional probe requires Bitget Demo API keys and paper env flags. It calls a read-only paper account endpoint with `paptrading: 1`, prints only safe metadata, and does not place orders.
 
+## Optional Guarded Paper Order
+
+```bash
+npm run demo:paper-order-guarded
+```
+
+The default run sends no order. It shows a safe `BTCUSDT` 3 USDT market buy reaching the paper client safety gate, while an unsafe `ETHUSDT` 20x order is blocked before execution.
+
+Intentional paper execution requires:
+
+```bash
+AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-order-guarded
+```
+
+If Bitget returns `43012 Insufficient balance`, the signed request still reached the Bitget demo endpoint; fund the demo spot account with paper USDT or lower the size if allowed.
+
 ## Safety Guarantees
 
 - Judge demo does not require private keys.
@@ -91,6 +108,7 @@ This optional probe requires Bitget Demo API keys and paper env flags. It calls 
 - Blocked orders do not reach execution.
 - Live trading is not implemented.
 - Paper order placement is not enabled by default.
+- Guarded paper order execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
 - Secrets are not printed by paper auth diagnostics.
 - `.env` files should never be committed.
 
