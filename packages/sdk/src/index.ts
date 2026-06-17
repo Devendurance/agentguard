@@ -6,3 +6,4 @@ export * from "./guard";
 export * from "./bitget-wrapper";
 export * from "./adapters";
 export * from "./providers";
+export * from "./dashboard";
