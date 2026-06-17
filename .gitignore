@@ -42,6 +42,8 @@ next-env.d.ts
 
 # AgentGuard SDK
 /dist
+packages/sdk/dist/
+*.tgz
 *.log
 agentguard/node_modules
 
