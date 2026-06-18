@@ -117,3 +117,5 @@ If Bitget returns `43012 Insufficient balance`, the signed request still reached
 AgentGuard is trading infrastructure, not a trading strategy. It gives AI trading developers a reusable middleware layer for policy enforcement, exchange adapter safety, audit logs, dashboard evidence, and future paper/live execution gates.
 
 The core value is preventing unsafe autonomous execution before it reaches Bitget-style trading APIs.
+
+The hosted dashboard displays committed verifiable usage records. New paper execution records are generated locally with npm run demo:paper-order-guarded and can be committed or viewed immediately in local dev.
