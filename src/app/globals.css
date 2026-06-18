@@ -75,7 +75,8 @@ a {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(8, 10, 12, 0.88);
+  background: rgba(8, 10, 12, 0.56);
+  transition: background-color 220ms ease-out, box-shadow 220ms ease-out;
 }
 
 .ag-nav::after {
@@ -86,12 +87,27 @@ a {
   height: 1px;
   content: "";
   background: linear-gradient(90deg, transparent, rgba(245, 247, 250, 0.075) 18%, rgba(245, 247, 250, 0.075) 82%, transparent);
+  opacity: 0;
+  transition: opacity 220ms ease-out;
+}
+
+.ag-nav-scrolled {
+  background: rgba(8, 10, 12, 0.9);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.18);
+}
+
+.ag-nav-scrolled::after {
+  opacity: 1;
 }
 
 @supports (backdrop-filter: blur(10px)) {
   .ag-nav {
-    background: rgba(8, 10, 12, 0.72);
+    background: rgba(8, 10, 12, 0.6);
     backdrop-filter: blur(10px);
+  }
+
+  .ag-nav-scrolled {
+    background: rgba(8, 10, 12, 0.84);
   }
 }
 
@@ -152,30 +168,8 @@ a {
 .ag-hero-subcopy,
 .ag-hero-actions,
 .ag-hero-status {
-  opacity: 0;
-  transform: translate3d(0, 28px, 0);
-  animation: ag-hero-copy-in 920ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: opacity, transform;
-}
-
-.ag-hero-kicker {
-  animation-delay: 120ms;
-}
-
-.ag-hero-headline {
-  animation-delay: 320ms;
-}
-
-.ag-hero-subcopy {
-  animation-delay: 560ms;
-}
-
-.ag-hero-actions {
-  animation-delay: 760ms;
-}
-
-.ag-hero-status {
-  animation-delay: 940ms;
+  opacity: 1;
+  transform: none;
 }
 
 .ag-motion-ready .ag-border-section > .ag-container,
@@ -230,6 +224,16 @@ main.ag-anchor-landing.ag-anchor-landed {
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+  }
+}
+
+.ag-title-line {
+  display: inline;
+}
+
+@media (min-width: 1024px) {
+  .ag-title-line {
+    display: inline-block;
   }
 }
 
@@ -296,10 +300,9 @@ main.ag-anchor-landing.ag-anchor-landed {
   right: 0;
   width: min(82%, 470px);
   pointer-events: none;
-  opacity: 0;
-  transform: translate3d(8%, -50%, 0);
+  opacity: 1;
+  transform: translate3d(0, -50%, 0);
   transform-origin: 70% 72%;
-  animation: ag-hero-robot-load 1000ms 520ms cubic-bezier(0.16, 1, 0.3, 1) both, ag-hero-robot-cycle 10s 1600ms ease-in-out infinite;
 }
 
 .ag-hero-checkpoint {
@@ -310,10 +313,9 @@ main.ag-anchor-landing.ag-anchor-landed {
   width: min(68%, 340px);
   background: rgba(7, 10, 12, 0.96);
   box-shadow: 0 0 30px rgba(74, 222, 128, 0.09);
-  opacity: 0;
-  transform: translate3d(8%, -46%, 0) scale(0.98);
+  opacity: 1;
+  transform: translate3d(0, -50%, 0) scale(1);
   transform-origin: center right;
-  animation: ag-hero-console-load 900ms 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .ag-hero-checkpoint::after {
@@ -335,16 +337,14 @@ main.ag-anchor-landing.ag-anchor-landed {
   border: 1px solid rgba(74, 222, 128, 0.8);
   border-radius: 50%;
   pointer-events: none;
-  opacity: 0;
-  transform: scale(0.3);
+  opacity: 0.42;
+  transform: scale(1);
   box-shadow: 0 0 16px rgba(74, 222, 128, 0.55);
-  animation: ag-hero-touch-cycle 10s 1700ms ease-out infinite;
 }
 
 .ag-hero-stage {
-  opacity: 0;
-  transform: translate3d(0, 12px, 0);
-  animation: ag-hero-stage-in 720ms 1180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  opacity: 1;
+  transform: none;
 }
 
 .ag-hero-summary {
@@ -376,19 +376,7 @@ main.ag-anchor-landing.ag-anchor-landed {
   border-radius: inherit;
   background: linear-gradient(90deg, var(--ag-green) 0 72%, var(--ag-amber) 72%);
   transform-origin: left;
-  animation: ag-hero-progress-in 1100ms 1650ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.ag-hero-stage-policies {
-  animation-delay: 1340ms;
-}
-
-.ag-hero-stage-decision {
-  animation-delay: 1520ms;
-}
-
-.ag-hero-stage-audit {
-  animation-delay: 1700ms;
+  transform: scaleX(1);
 }
 
 .ag-hero-checkpoint:hover,
@@ -728,9 +716,24 @@ main.ag-anchor-landing.ag-anchor-landed {
   background: linear-gradient(90deg, var(--ag-border), rgba(74, 222, 128, 0.34), rgba(251, 191, 36, 0.34), rgba(56, 189, 248, 0.28));
 }
 
+.ag-pipeline-line-fill {
+  position: absolute;
+  top: 27px;
+  right: 7%;
+  left: 7%;
+  z-index: 1;
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(74, 222, 128, 0.72), rgba(251, 191, 36, 0.66), rgba(56, 189, 248, 0.6));
+  list-style: none;
+  pointer-events: none;
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
 .ag-pipeline-node {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -759,6 +762,15 @@ main.ag-anchor-landing.ag-anchor-landed {
   color: var(--ag-blue);
 }
 
+.ag-code-line {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  border-radius: 4px;
+  padding-inline: 0.25rem;
+  transform-origin: left center;
+}
+
 .ag-table-head,
 .ag-table-cell {
   padding: 0.75rem 1rem;
@@ -775,6 +787,11 @@ main.ag-anchor-landing.ag-anchor-landed {
 
 .ag-incident-row {
   border-left: 2px solid var(--ag-border);
+  transition: background-color 160ms ease-out;
+}
+
+.ag-incident-row:hover {
+  background: rgba(245, 247, 250, 0.025);
 }
 
 .ag-incident-approved {
@@ -896,7 +913,8 @@ main.ag-anchor-landing.ag-anchor-landed {
     row-gap: 2rem;
   }
 
-  .ag-pipeline::before {
+  .ag-pipeline::before,
+  .ag-pipeline-line-fill {
     display: none;
   }
 }

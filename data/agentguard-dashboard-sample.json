@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T19:08:44.594Z",
+  "generatedAt": "2026-06-18T06:03:59.965Z",
   "metrics": {
     "ordersEvaluated": 5,
     "approved": 1,
@@ -16,8 +16,8 @@
   },
   "events": [
     {
-      "id": "risk_evt_1781723324590_i72dpp",
-      "timestamp": "2026-06-17T19:08:44.590Z",
+      "id": "risk_evt_1781762639948_o0x6mc",
+      "timestamp": "2026-06-18T06:03:59.948Z",
       "symbol": "BTCUSDT",
       "action": "approve",
       "reason": "within_policy",
@@ -27,8 +27,8 @@
       "source": "mock"
     },
     {
-      "id": "risk_evt_1781723324593_ywqgry",
-      "timestamp": "2026-06-17T19:08:44.593Z",
+      "id": "risk_evt_1781762639952_gykgo5",
+      "timestamp": "2026-06-18T06:03:59.952Z",
       "symbol": "SOLUSDT",
       "action": "resize",
       "reason": "max_order_size_exceeded_resized",
@@ -38,8 +38,8 @@
       "source": "mock"
     },
     {
-      "id": "risk_evt_1781723324593_2wbndm",
-      "timestamp": "2026-06-17T19:08:44.593Z",
+      "id": "risk_evt_1781762639954_dh3s7a",
+      "timestamp": "2026-06-18T06:03:59.954Z",
       "symbol": "ETHUSDT",
       "action": "block",
       "reason": "max_leverage_exceeded",
@@ -49,8 +49,8 @@
       "source": "mock"
     },
     {
-      "id": "risk_evt_1781723324593_y8nffb",
-      "timestamp": "2026-06-17T19:08:44.593Z",
+      "id": "risk_evt_1781762639958_ym1wyd",
+      "timestamp": "2026-06-18T06:03:59.958Z",
       "symbol": "BTCUSDT",
       "action": "block",
       "reason": "volatility_stress",
@@ -60,8 +60,8 @@
       "source": "technical-analysis"
     },
     {
-      "id": "risk_evt_1781723324594_il3c3y",
-      "timestamp": "2026-06-17T19:08:44.594Z",
+      "id": "risk_evt_1781762639963_jq1zjc",
+      "timestamp": "2026-06-18T06:03:59.963Z",
       "symbol": "SOLUSDT",
       "action": "block",
       "reason": "extreme_sentiment",

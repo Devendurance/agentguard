@@ -6,7 +6,7 @@
  * plus all required Bitget paper env flags.
  */
 
-import { mkdir, writeFile } from "fs/promises";
+import { mkdir, readFile, writeFile } from "fs/promises";
 import { dirname, join } from "path";
 import {
   AgentGuard,
@@ -52,6 +52,20 @@ type ScenarioRecord = {
   unsafeForwardedToPaperClient?: boolean;
   paperResult?: SanitizedPaperResult;
   orderInfo?: SanitizedOrderInfo;
+};
+
+type UsageRecord = {
+  generatedAt: string;
+  mode: "paper";
+  endpoint: "/api/v2/spot/trade/place-order";
+  safeOrder: ScenarioRecord;
+  unsafeOrder: {
+    input: ScenarioRecord["input"];
+    decision: string;
+    reason: string;
+    unsafeForwardedToPaperClient: false;
+  };
+  safetyNotes: string[];
 };
 
 function describeOrder(order: OrderIntent): string {
@@ -149,7 +163,7 @@ async function runScenario(
 }
 
 async function writeUsageRecord(safeOrder: ScenarioRecord, unsafeOrder: ScenarioRecord) {
-  const record = {
+  const record: UsageRecord = {
     generatedAt: new Date().toISOString(),
     mode: "paper",
     endpoint: "/api/v2/spot/trade/place-order",
@@ -168,10 +182,26 @@ async function writeUsageRecord(safeOrder: ScenarioRecord, unsafeOrder: Scenario
     ],
   };
 
-  const outputPath = join(process.cwd(), "data", "agentguard-paper-order-record.json");
+  const outputPath = join(process.cwd(), "data", "agentguard-paper-order-records.json");
   await mkdir(dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, `${JSON.stringify(record, null, 2)}\n`, "utf-8");
-  console.log("\nUsage record written: data/agentguard-paper-order-record.json");
+
+  let records: UsageRecord[] = [];
+  try {
+    const existing = await readFile(outputPath, "utf-8");
+    const parsed = JSON.parse(existing) as unknown;
+    if (Array.isArray(parsed)) {
+      records = parsed as UsageRecord[];
+    } else if (parsed && typeof parsed === "object") {
+      records = [parsed as UsageRecord];
+    }
+  } catch {
+    records = [];
+  }
+
+  records.push(record);
+  await writeFile(outputPath, `${JSON.stringify(records, null, 2)}\n`, "utf-8");
+  console.log(`\nUsage records written: ${outputPath}`);
+  console.log(`Total record count: ${records.length}`);
 }
 
 async function main() {
