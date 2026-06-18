@@ -43,7 +43,18 @@ export interface BitgetPaperOrderErrorResult extends BitgetPaperOrderResult {
   reason: string;
 }
 
+export interface BitgetPaperOrderInfoResult {
+  mode: "paper";
+  endpoint: typeof ORDER_INFO_PATH;
+  code?: string;
+  msg?: string;
+  data?: Record<string, unknown>;
+  orderId?: string;
+  clientOid?: string;
+}
+
 const PLACE_ORDER_PATH = "/api/v2/spot/trade/place-order" as const;
+const ORDER_INFO_PATH = "/api/v2/spot/trade/orderInfo" as const;
 const MAX_PAPER_ORDER_USD = 3;
 
 /**
@@ -114,6 +125,41 @@ export class BitgetPaperTradingClient implements ExecutionClient {
     };
   }
 
+  async getOrderInfo(orderId?: string, clientOid?: string): Promise<BitgetPaperOrderInfoResult> {
+    if (!orderId && !clientOid) {
+      throw new Error("orderId or clientOid is required");
+    }
+
+    assertCanUsePaperTrading(this.env);
+
+    const requestPath = this.buildOrderInfoPath(orderId, clientOid);
+    const method = "GET";
+    const headers = this.buildHeaders(method, requestPath, "");
+    const response = await fetch(`${this.baseUrl}${requestPath}`, {
+      method,
+      headers,
+    });
+
+    const raw = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+    const data = typeof raw.data === "object" && raw.data !== null
+      ? (raw.data as Record<string, unknown>)
+      : {};
+
+    return {
+      mode: "paper",
+      endpoint: ORDER_INFO_PATH,
+      code: typeof raw.code === "string" ? raw.code : undefined,
+      msg: typeof raw.msg === "string"
+        ? raw.msg
+        : typeof raw.message === "string"
+          ? raw.message
+          : undefined,
+      data,
+      orderId: typeof data.orderId === "string" ? data.orderId : undefined,
+      clientOid: typeof data.clientOid === "string" ? data.clientOid : undefined,
+    };
+  }
+
   private getInvalidOrderReason(order: OrderIntent): string | null {
     if (order.symbol !== "BTCUSDT") {
       return "Only BTCUSDT is allowed for the guarded paper order demo.";
@@ -170,6 +216,18 @@ export class BitgetPaperTradingClient implements ExecutionClient {
       "locale": "en-US",
       "paptrading": "1",
     };
+  }
+
+  private buildOrderInfoPath(orderId?: string, clientOid?: string): string {
+    const params = new URLSearchParams();
+    if (orderId) {
+      params.set("orderId", orderId);
+    }
+    if (clientOid) {
+      params.set("clientOid", clientOid);
+    }
+    const query = params.toString();
+    return query ? `${ORDER_INFO_PATH}?${query}` : ORDER_INFO_PATH;
   }
 
   private async postPaperOrder(
