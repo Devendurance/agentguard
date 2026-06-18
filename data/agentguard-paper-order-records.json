@@ -288,5 +288,51 @@
       "No cancel, close, leverage, transfer, or withdraw endpoints are used.",
       "Default run does not send a paper order unless AGENTGUARD_EXECUTE_PAPER_ORDER=true."
     ]
+  },
+  {
+    "generatedAt": "2026-06-18T16:10:53.173Z",
+    "mode": "paper",
+    "endpoint": "/api/v2/spot/trade/place-order",
+    "safeOrder": {
+      "input": {
+        "symbol": "BTCUSDT",
+        "side": "buy",
+        "orderType": "market",
+        "notionalUsd": 3,
+        "leverage": 2
+      },
+      "decision": "approve",
+      "reason": "within_policy",
+      "forwardedToPaperClient": true,
+      "paperResult": {
+        "status": "paper_order_sent",
+        "code": "00000",
+        "msg": "success",
+        "orderId": "1451535926136111104",
+        "clientOid": "d81ab378-8d40-457c-b33d-ca52c9a02b00"
+      },
+      "orderInfo": {
+        "code": "00000",
+        "msg": "success"
+      }
+    },
+    "unsafeOrder": {
+      "input": {
+        "symbol": "ETHUSDT",
+        "side": "buy",
+        "orderType": "market",
+        "notionalUsd": 200,
+        "leverage": 20
+      },
+      "decision": "block",
+      "reason": "max_leverage_exceeded",
+      "unsafeForwardedToPaperClient": false
+    },
+    "safetyNotes": [
+      "No live trading is implemented.",
+      "No secrets or signed headers are written to this record.",
+      "No cancel, close, leverage, transfer, or withdraw endpoints are used.",
+      "Default run does not send a paper order unless AGENTGUARD_EXECUTE_PAPER_ORDER=true."
+    ]
   }
 ]

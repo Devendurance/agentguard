@@ -1,5 +1,6 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -193,16 +194,26 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-[var(--ag-bg)] text-[var(--ag-text)]">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-[var(--ag-border-soft)] bg-[rgba(8,10,12,.88)] backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold">AgentGuard Dashboard</h1>
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/" className="text-lg font-semibold transition-colors hover:text-[var(--ag-green)]">
+              AgentGuard Dashboard
+            </Link>
             <span className="rounded-full border border-[var(--ag-border-soft)] bg-[var(--ag-raised)] px-2.5 py-0.5 text-[10px] font-medium uppercase text-[var(--ag-muted)]">
               Demo Mode
             </span>
           </div>
-          <p className="hidden text-xs text-[var(--ag-muted)] sm:block">
-            Visual proof of AgentGuard decisions before Bitget-style execution.
-          </p>
+          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center rounded-full border border-[var(--ag-border-soft)] bg-[var(--ag-raised)] px-3.5 py-1.5 text-xs font-medium text-[var(--ag-text)] transition-colors hover:border-[rgba(74,222,128,.35)] hover:text-[var(--ag-green)]"
+            >
+              Back to site
+            </Link>
+            <p className="hidden text-xs text-[var(--ag-muted)] sm:block">
+              Visual proof of AgentGuard decisions before Bitget-style execution.
+            </p>
+          </div>
         </div>
       </header>
 
