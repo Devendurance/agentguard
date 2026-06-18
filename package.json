@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "@bitget-ai/getagent-skill": "^0.2.1",
+        "@gsap/react": "^2.1.2",
         "gsap": "^3.15.0",
         "next": "16.2.7",
         "react": "19.2.4",
