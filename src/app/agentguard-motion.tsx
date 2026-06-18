@@ -89,7 +89,6 @@ export function AgentGuardMotion() {
         const titleLines = select("[data-hero-title] .ag-title-line");
 
         heroTimeline
-          .from("[data-hero-kicker]", { autoAlpha: 0, y: 14, duration: 0.42 })
           .from(titleLines, { autoAlpha: 0, y: 20, duration: 0.56, stagger: 0.09 }, "-=0.16")
           .from("[data-hero-title] .ag-title-emphasis", { color: "#f5f7fa", duration: 0.7 }, "-=0.38")
           .from("[data-hero-copy]", { autoAlpha: 0, y: 16, duration: 0.48 }, "-=0.24")

@@ -2,6 +2,8 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import Image from "next/image";
 import { AgentGuardMotion } from "./agentguard-motion";
 
+const GITHUB_REPO_URL = "https://github.com/Devendurance/agentguard";
+
 const statusItems = ["Open-source SDK", "Policy engine", "Bitget paper/demo trading", "Replay logs"];
 
 const pipelineSteps = [
@@ -132,7 +134,7 @@ export default function Home() {
             ))}
           </ul>
           <div className="flex items-center gap-2">
-            <a className="ag-btn ag-btn-secondary hidden sm:inline-flex" href="#github">GitHub</a>
+            <a className="ag-btn ag-btn-secondary hidden sm:inline-flex" href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
             <a className="ag-btn ag-btn-primary" href="/dashboard">Run Demo</a>
           </div>
         </nav>
@@ -143,10 +145,6 @@ export default function Home() {
         <section className="ag-hero ag-section" data-hero-root>
           <div className="ag-container ag-hero-grid grid items-center gap-12 lg:grid-cols-[5fr_7fr]">
             <div className="ag-hero-copy">
-              <p className="ag-hero-kicker mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(74,222,128,.22)] bg-[rgba(74,222,128,.08)] px-3 py-1.5" data-hero-kicker>
-                <span className="size-1.5 rounded-full bg-[var(--ag-green)]" aria-hidden="true" />
-                <span className="ag-mono text-[10px] font-medium text-[var(--ag-green)]">v0.4.2 — public beta</span>
-              </p>
               <h1 className="ag-hero-headline ag-display max-w-[720px] text-balance text-5xl leading-none text-[var(--ag-text)] sm:text-6xl lg:text-[76px]" data-hero-title>
                 <span className="ag-title-line">The risk firewall for</span>{" "}
                 <em className="ag-title-line ag-title-emphasis text-[var(--ag-muted)]">autonomous</em>{" "}
@@ -157,7 +155,7 @@ export default function Home() {
               </p>
               <div className="ag-hero-actions mt-8 flex flex-col gap-3 sm:flex-row" data-hero-cta>
                 <a className="ag-btn ag-btn-primary ag-btn-lg" href="/dashboard">Run Demo →</a>
-                <a className="ag-btn ag-btn-developer ag-btn-lg" href="#github">View GitHub</a>
+                <a className="ag-btn ag-btn-developer ag-btn-lg" href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">View GitHub</a>
               </div>
               <ul className="ag-hero-status mt-8 flex flex-wrap gap-x-0 gap-y-3" aria-label="AgentGuard capabilities">
                 {statusItems.map((item, index) => (
@@ -325,7 +323,7 @@ export default function Home() {
             <div className="ag-panel mt-9 overflow-hidden" data-console-panel>
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--ag-border-soft)] px-5 py-4">
                 <div className="flex items-center gap-3"><strong className="ag-mono text-xs text-[var(--ag-text)]">AgentGuard / incident-log</strong><Chip variant="audit">paper feed</Chip></div>
-                <a className="ag-btn ag-btn-secondary" href="#github">Export Log</a>
+                <a className="ag-btn ag-btn-secondary" href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">Export Log</a>
               </div>
               <div className="overflow-x-auto">
                 <table className="min-w-[900px] w-full border-collapse text-left">
@@ -393,7 +391,7 @@ export default function Home() {
                   <p className="mt-2 ag-mono text-xs text-[var(--ag-red)]">ETHUSDT 20x → max_leverage_exceeded</p>
                 </div>
               </dl>
-              <a className="ag-btn ag-btn-developer mt-5 w-full justify-center" href="#github">Read the SDK docs →</a>
+              <a className="ag-btn ag-btn-developer mt-5 w-full justify-center" href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">Read the SDK docs →</a>
             </aside>
           </div>
         </section>
@@ -404,7 +402,7 @@ export default function Home() {
             <p className="mx-auto mt-5 max-w-md text-pretty text-base leading-7 text-[var(--ag-muted)]">Autonomous agents should move fast. They should not execute without limits.</p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <a className="ag-btn ag-btn-primary ag-btn-lg" href="/dashboard">Run Demo →</a>
-              <a className="ag-btn ag-btn-developer ag-btn-lg" href="#github">View GitHub</a>
+              <a className="ag-btn ag-btn-developer ag-btn-lg" href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">View GitHub</a>
             </div>
             <p className="ag-mono mx-auto mt-8 max-w-2xl text-[10px] uppercase text-[var(--ag-muted)]">Agent → AgentGuard checkpoint → Bitget paper/demo execution</p>
           </div>
@@ -415,7 +413,7 @@ export default function Home() {
         <div className="ag-container flex flex-col justify-between gap-5 text-[10px] text-[var(--ag-muted)] sm:flex-row sm:items-center">
           <p className="ag-mono">OPEN-SOURCE RISK FIREWALL SDK · AgentGuard enforces risk boundaries before paper execution.</p>
           <nav aria-label="Footer navigation" className="flex flex-wrap gap-5">
-            <a href="#github" className="ag-footer-link">GitHub</a>
+            <a href={GITHUB_REPO_URL} className="ag-footer-link" target="_blank" rel="noopener noreferrer">GitHub</a>
             <a href="#sdk" className="ag-footer-link">SDK</a>
             <a href="#policy" className="ag-footer-link">Policy Engine</a>
             <a href="#replay" className="ag-footer-link">Replay Logs</a>

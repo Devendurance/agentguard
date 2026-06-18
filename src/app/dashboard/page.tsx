@@ -173,10 +173,10 @@ function SeverityBadge({ severity }: { severity: string }) {
 
 function MetricCard({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
   return (
-    <div className="rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-panel)] p-4">
-      <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-muted)]">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-[var(--ag-text)] tabular-nums">{value}</p>
-      {hint && <p className="mt-0.5 text-[10px] text-[var(--ag-muted)]">{hint}</p>}
+    <div className="ag-dashboard-metric-card rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-panel)] p-4">
+      <p className="ag-dashboard-metric-label text-[10px] font-medium uppercase tracking-wide text-[var(--ag-muted)]">{label}</p>
+      <p className="ag-dashboard-metric-value mt-1 text-2xl font-semibold text-[var(--ag-text)] tabular-nums">{value}</p>
+      {hint && <p className="ag-dashboard-metric-hint mt-0.5 text-[10px] text-[var(--ag-muted)]">{hint}</p>}
     </div>
   );
 }
@@ -191,10 +191,10 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[var(--ag-bg)] text-[var(--ag-text)]">
+    <div className="min-h-screen bg-[var(--ag-bg)] text-[var(--ag-text)] ag-dashboard-shell">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-[var(--ag-border-soft)] bg-[rgba(8,10,12,.88)] backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+      <header className="ag-dashboard-header sticky top-0 z-40 border-b border-[var(--ag-border-soft)] bg-[rgba(8,10,12,.88)] backdrop-blur">
+        <div className="ag-dashboard-header-inner mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div className="flex flex-wrap items-center gap-3">
             <Link href="/" className="text-lg font-semibold transition-colors hover:text-[var(--ag-green)]">
               AgentGuard Dashboard
@@ -203,7 +203,7 @@ export default async function DashboardPage() {
               Demo Mode
             </span>
           </div>
-          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
+          <div className="ag-dashboard-header-actions flex flex-wrap items-center gap-3 lg:justify-end">
             <Link
               href="/"
               className="inline-flex items-center justify-center rounded-full border border-[var(--ag-border-soft)] bg-[var(--ag-raised)] px-3.5 py-1.5 text-xs font-medium text-[var(--ag-text)] transition-colors hover:border-[rgba(74,222,128,.35)] hover:text-[var(--ag-green)]"
@@ -217,11 +217,11 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="ag-dashboard-main mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Top Metrics */}
-        <section className="mb-8">
+        <section className="ag-dashboard-metrics-section mb-8">
           <h2 className="mb-4 text-sm font-medium text-[var(--ag-muted)]">Key Metrics</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+          <div className="ag-dashboard-metrics grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
             <MetricCard label="Evaluated" value={metrics.ordersEvaluated} />
             <MetricCard label="Approved" value={metrics.approved} hint={`${metrics.approvalRatePct}% rate`} />
             <MetricCard label="Resized" value={metrics.resized} />
@@ -239,7 +239,7 @@ export default async function DashboardPage() {
 
         {/* Verifiable Usage Record */}
         {sortedPaperOrderRecords.length > 0 && (
-          <section className="mb-8">
+          <section className="ag-dashboard-records-section mb-8">
             <h2 className="mb-4 text-sm font-medium text-[var(--ag-muted)]">
               Verifiable Usage Records ({sortedPaperOrderRecords.length})
             </h2>
@@ -254,7 +254,7 @@ export default async function DashboardPage() {
                         <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-medium uppercase ${badge.className}`}>
                           {badge.label}
                         </span>
-                        <div className="grid gap-3 text-xs sm:grid-cols-3">
+                        <div className="ag-dashboard-record-meta grid gap-3 text-xs sm:grid-cols-2 lg:grid-cols-3">
                           <div>
                             <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-muted)]">Generated</p>
                             <p className="mt-1 font-mono">{new Date(paperOrderRecord.generatedAt).toLocaleString()}</p>
@@ -270,10 +270,10 @@ export default async function DashboardPage() {
                         </div>
                       </div>
 
-                      <div className="grid gap-4 lg:grid-cols-2">
+                      <div className="ag-dashboard-record-panels grid gap-4 lg:grid-cols-2">
                         <div className="rounded-lg border border-[rgba(74,222,128,.24)] bg-[rgba(74,222,128,.06)] p-4">
                           <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-green)]">Approved BTC Order</p>
-                          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                          <dl className="ag-dashboard-order-grid mt-3 grid grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-2">
                             <dt className="text-[var(--ag-muted)]">Intent</dt>
                             <dd className="font-mono">{paperOrderRecord.safeOrder.input.symbol} {paperOrderRecord.safeOrder.input.side} {paperOrderRecord.safeOrder.input.orderType}</dd>
                             <dt className="text-[var(--ag-muted)]">Size</dt>
@@ -297,7 +297,7 @@ export default async function DashboardPage() {
 
                         <div className="rounded-lg border border-[rgba(244,63,94,.24)] bg-[rgba(244,63,94,.06)] p-4">
                           <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--ag-red)]">Blocked ETH Order</p>
-                          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                          <dl className="ag-dashboard-order-grid mt-3 grid grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-2">
                             <dt className="text-[var(--ag-muted)]">Intent</dt>
                             <dd className="font-mono">{paperOrderRecord.unsafeOrder.input.symbol} {paperOrderRecord.unsafeOrder.input.side} {paperOrderRecord.unsafeOrder.input.orderType}</dd>
                             <dt className="text-[var(--ag-muted)]">Size</dt>
@@ -329,9 +329,9 @@ export default async function DashboardPage() {
         )}
 
         {/* Event Stream */}
-        <section className="mb-8">
+        <section className="ag-dashboard-log-section mb-8">
           <h2 className="mb-4 text-sm font-medium text-[var(--ag-muted)]">Decision Log</h2>
-          <div className="overflow-hidden rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-panel)]">
+          <div className="ag-dashboard-log overflow-hidden rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-panel)]">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-[var(--ag-border-soft)]">
                 <thead className="bg-[var(--ag-raised)]">
@@ -370,9 +370,9 @@ export default async function DashboardPage() {
 
         {/* Policy Summary */}
         {policy && (
-          <section className="mb-8">
+          <section className="ag-dashboard-policy-section mb-8">
             <h2 className="mb-4 text-sm font-medium text-[var(--ag-muted)]">Active Policy</h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="ag-dashboard-policy-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-panel)] p-4">
                 <p className="text-[10px] font-medium uppercase text-[var(--ag-muted)]">Max Leverage</p>
                 <p className="mt-1 text-xl font-semibold">{policy.maxLeverage}x</p>
@@ -414,7 +414,7 @@ export default async function DashboardPage() {
         )}
 
         {/* Explanation */}
-        <section>
+        <section className="ag-dashboard-explanation-section">
           <h2 className="mb-4 text-sm font-medium text-[var(--ag-muted)]">What This Demo Proves</h2>
           <div className="rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-panel)] p-5">
             <ul className="space-y-3 text-sm text-[var(--ag-muted)]">

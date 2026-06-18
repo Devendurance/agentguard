@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Georama, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   title: "AgentGuard — Risk Firewall for Autonomous Trading Agents",
   description:
     "AgentGuard sits between autonomous agents and Bitget execution APIs, enforcing deterministic risk policies before trades reach the exchange.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
