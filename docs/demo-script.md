@@ -29,10 +29,22 @@ Guarded paper order demo, safe by default:
 npm run demo:paper-order-guarded
 ```
 
+Resize paper proof demo, safe by default:
+
+```bash
+npm run demo:paper-resize-guarded
+```
+
 Optional intentional paper execution:
 
 ```bash
 AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-order-guarded
+```
+
+Optional intentional resize execution:
+
+```bash
+AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-resize-guarded
 ```
 
 ## What The Output Proves
@@ -70,11 +82,20 @@ AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-order-guarded
 - If intentional execution returns Bitget `43012 Insufficient balance`, the signed paper order request still reached the Bitget demo endpoint; the demo spot account needs paper USDT or a lower allowed size for a full fill.
 - If intentional execution returns `code: 00000` with `orderId` or `clientOid`, the demo performs a read-only `GET /api/v2/spot/trade/orderInfo` query and prints sanitized proof fields: `code`, `msg`, `orderId`, `clientOid`, `symbol`, `side`, `orderType`, and `status`.
 
+`npm run demo:paper-resize-guarded` proves:
+
+- The default run sends no order.
+- AgentGuard resizes the oversized `SOLUSDT` 8 USDT market buy intent down to 3 USDT.
+- The paper client safety gate stays closed unless `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
+- A sanitized verifiable usage record is appended to `data/agentguard-paper-order-records.json`.
+- `/dashboard` can show the new resize usage record after refresh.
+- Intentional execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
+
 ## Dashboard Mention
 
 The dashboard is available at `/dashboard` in the Next.js app and reads generated sample data from `data/agentguard-dashboard-sample.json`.
 
-It also reads the append-only `data/agentguard-paper-order-records.json` file when present and displays it in the "Verifiable Usage Records" section as an audit viewer. Refreshing `/dashboard` reloads the saved local records.
+It also reads the append-only `data/agentguard-paper-order-records.json` file when present and displays it in the "Verifiable Usage Records" section as an audit viewer. Refreshing `/dashboard` reloads the saved local records, including resize records.
 
 Use `npm run demo:dashboard-data` directly if you only want to refresh dashboard data.
 

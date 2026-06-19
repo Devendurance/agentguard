@@ -22,6 +22,7 @@
         "demo:bitget-paper-account-probe": "ts-node --project tsconfig.agentguard.json examples/bitget-paper-account-probe/index.ts",
         "demo:bitget-paper-connectivity": "ts-node --project tsconfig.agentguard.json examples/bitget-paper-connectivity/index.ts",
         "demo:paper-order-guarded": "ts-node --project tsconfig.agentguard.json examples/bitget-paper-order-guarded/index.ts",
+        "demo:paper-resize-guarded": "ts-node --project tsconfig.agentguard.json examples/bitget-paper-resize-guarded/index.ts",
         "sdk:build": "npm --prefix packages/sdk run build",
         "sdk:pack": "npm run sdk:build && npm pack ./packages/sdk"
     },

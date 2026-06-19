@@ -49,7 +49,7 @@ AgentGuard currently supports:
 - Bitget public read-only market data provider works.
 - Trading agent integration demo works.
 - Dashboard data generation works.
-- SDK packaging works through `@agentguard/sdk`.
+- SDK packaging works through local npm packing.
 - Paper read-only account probe is available as an optional credential check.
 - Guarded paper order demo is available and safe by default.
 
@@ -77,6 +77,147 @@ Install the packed SDK in another project with:
 npm install ./agentguard-sdk-0.1.0.tgz
 ```
 
+## How Developers Use AgentGuard
+
+1. Install/build the SDK
+
+AgentGuard is currently installable from a local packed tarball.
+
+```bash
+npm run sdk:pack
+npm install ./agentguard-sdk-0.1.0.tgz
+```
+
+Future npm package style:
+
+```bash
+npm install @agentguard/sdk
+```
+
+2. Add a policy file
+
+```json
+{
+  "mode": "active",
+  "maxLeverage": 5,
+  "maxOrderUsd": 250,
+  "maxDailyDrawdownPct": 3,
+  "allowedSymbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT"],
+  "failClosed": true,
+  "actions": {
+    "onOrderTooLarge": "resize",
+    "onDrawdownBreach": "flatten",
+    "onUnknownRiskState": "block"
+  },
+  "marketRisk": {
+    "enabled": true,
+    "blockOnExtremeRegime": true,
+    "blockOnExtremeSentiment": true,
+    "maxVolatilityPct": 8,
+    "maxFundingRateAbs": 0.05
+  }
+}
+```
+
+3. Wrap the trading agent's execution client
+
+```ts
+import {
+  AgentGuard,
+  BitgetPaperTradingClient,
+  BitgetPublicMarketStateProvider,
+  createAgentGuardedClient,
+  loadPolicy
+} from "@agentguard/sdk";
+
+const policy = await loadPolicy("./agentguard.policy.example.json");
+const guard = new AgentGuard({ policy });
+
+const marketProvider = new BitgetPublicMarketStateProvider();
+
+const paperClient = new BitgetPaperTradingClient({
+  maxPaperOrderUsd: 3
+});
+
+const accountState = {
+  equityUsd: 10000,
+  dailyPnlUsd: -100,
+  dailyDrawdownPct: 1,
+  totalDrawdownPct: 2,
+  openExposureUsd: 500,
+  symbolExposureUsd: {
+    BTCUSDT: 200,
+    ETHUSDT: 200,
+    SOLUSDT: 100
+  }
+};
+
+const guardedClient = createAgentGuardedClient(
+  paperClient,
+  guard,
+  () => accountState,
+  (order) => marketProvider.getMarketState(order)
+);
+```
+
+4. Send agent-generated orders through AgentGuard
+
+```ts
+const agentOrder = {
+  symbol: "BTCUSDT",
+  side: "buy",
+  orderType: "market",
+  notionalUsd: 3,
+  leverage: 2
+};
+
+const result = await guardedClient.placeOrder(agentOrder);
+
+console.log(result.decision);
+console.log(result.forwarded);
+console.log(result.executionResult);
+```
+
+5. Explain decisions
+
+- `approve`: order is within policy and can reach the adapter
+- `resize`: oversized order is reduced to `maxOrderUsd` before forwarding
+- `block`: unsafe order never reaches execution
+- `pause`: policy mode can halt forwarding
+- `flatten`: AgentGuard can emit a flatten decision on drawdown breach, but exchange-level position closing is intentionally not implemented yet
+
+6. Explain execution safety
+
+- dry-run is safe by default
+- Bitget paper/demo execution is gated
+- live trading is not implemented
+- paper order execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`
+- blocked orders never reach Bitget
+
+## Implemented Guard Actions
+
+- `approve`: built and tested
+- `resize`: built and tested with oversized SOLUSDT `$800` resized to `$250`
+- `block`: built and tested with overleveraged ETH and unsupported DOGE
+- `pause`: built as policy mode decision; paused mode prevents forwarding
+- `flatten`: built as deterministic policy decision/audit event for drawdown breach; exchange-level close/flatten execution is not implemented yet
+
+## Package Status
+
+AgentGuard is not published to npm yet.
+For this hackathon, the SDK is installable through local npm packing:
+
+```bash
+npm run sdk:pack
+npm install ./agentguard-sdk-0.1.0.tgz
+```
+
+Future npm release target:
+
+```bash
+npm install @agentguard/sdk
+```
+
 ## Optional Paper Auth
 
 ```bash
@@ -101,6 +242,20 @@ AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-order-guarded
 
 If Bitget returns `43012 Insufficient balance`, the signed request still reached the Bitget demo endpoint; fund the demo spot account with paper USDT or lower the size if allowed.
 
+Resize paper proof:
+
+```bash
+npm run demo:paper-resize-guarded
+```
+
+The default run does not place an order. It shows an oversized `SOLUSDT` market buy being resized from `$8` to `$3`, then written to `data/agentguard-paper-order-records.json` for `/dashboard`.
+
+Intentional paper execution requires:
+
+```bash
+AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-resize-guarded
+```
+
 ## Safety Guarantees
 
 - Judge demo does not require private keys.
@@ -109,6 +264,8 @@ If Bitget returns `43012 Insufficient balance`, the signed request still reached
 - Live trading is not implemented.
 - Paper order placement is not enabled by default.
 - Guarded paper order execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
+- Resize paper order execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
+- `/dashboard` shows appended verifiable usage records, including resize records.
 - Secrets are not printed by paper auth diagnostics.
 - `.env` files should never be committed.
 

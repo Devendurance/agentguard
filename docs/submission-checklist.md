@@ -49,3 +49,11 @@
 - [ ] `data/agentguard-paper-order-records.json` is generated as append-only verifiable usage records.
 - [ ] The usage record contains no secrets, signed headers, or raw credentials.
 - [ ] Bitget `43012 Insufficient balance` is documented as proof that the signed request reached the demo endpoint but the paper spot account lacked enough USDT.
+
+## Optional Resize Paper Order
+
+- [ ] `npm run demo:paper-resize-guarded` is safe by default and sends no order.
+- [ ] Intentional execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
+- [ ] `SOLUSDT` 8 USDT market buy is resized to 3 USDT before the paper client step.
+- [ ] The resize usage record is appended to `data/agentguard-paper-order-records.json`.
+- [ ] `/dashboard` displays the appended resize record after refresh.
