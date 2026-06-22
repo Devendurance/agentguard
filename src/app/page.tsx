@@ -59,7 +59,7 @@ const sdkCodeLines = [
   '  BitgetPublicMarketStateProvider,',
   '  createAgentGuardedClient,',
   '  loadPolicy',
-  '} from "@agentguard/sdk";',
+  '} from "@devendurance/agentguard-sdk";',
   "",
   'const policy = await loadPolicy("./agentguard.policy.example.json");',
   "",
@@ -151,7 +151,7 @@ export default function Home() {
                 <span className="ag-title-line">trading agents.</span>
               </h1>
               <p className="ag-hero-subcopy mt-6 max-w-md text-pretty text-base leading-7 text-[var(--ag-muted)] sm:text-lg" data-hero-copy>
-                AgentGuard sits between autonomous agents and Bitget paper/demo trading, blocking unsafe trades before paper execution.
+                AgentGuard sits between autonomous agents and Bitget paper/demo trading, blocking unsafe trades before Bitget paper execution.
               </p>
               <div className="ag-hero-actions mt-8 flex flex-col gap-3 sm:flex-row" data-hero-cta>
                 <a className="ag-btn ag-btn-primary ag-btn-lg" href="/dashboard">Run Demo →</a>
@@ -218,7 +218,7 @@ export default function Home() {
             <p className="ag-eyebrow">The Problem</p>
             <h2 className="ag-section-title max-w-3xl">AI agents can reason. They can also trade past your risk.</h2>
             <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-[var(--ag-muted)]">
-              A trading agent can oversize a position, ignore volatility, over-leverage, or keep trading after a drawdown breach. AgentGuard adds deterministic policy enforcement before paper execution, so unsafe orders are caught before they touch the market.
+              A trading agent can oversize a position, ignore volatility, over-leverage, or keep trading after a drawdown breach. AgentGuard adds deterministic policy enforcement before Bitget paper execution, so blocked orders never reach execution.
             </p>
             <div className="mt-10 grid gap-5 lg:grid-cols-2">
               <article className="ag-panel" data-unsafe-card>
@@ -256,7 +256,7 @@ export default function Home() {
             <div className="mx-auto max-w-2xl text-center">
               <p className="ag-eyebrow justify-center">How it works</p>
               <h2 className="ag-section-title">Every order passes through a safety gate.</h2>
-              <p className="mt-4 text-pretty text-base leading-7 text-[var(--ag-muted)]">AgentGuard intercepts each trade intent, evaluates it against your policy config, and returns a deterministic decision before paper execution happens.</p>
+              <p className="mt-4 text-pretty text-base leading-7 text-[var(--ag-muted)]">AgentGuard intercepts each trade intent, evaluates it against your policy config, and returns a deterministic decision before Bitget paper execution happens.</p>
             </div>
             <ol className="ag-pipeline mt-12" aria-label="AgentGuard trade checkpoint flow">
               <li className="ag-pipeline-line-fill" aria-hidden="true" data-pipeline-line />
@@ -352,12 +352,11 @@ export default function Home() {
             <div>
               <p className="ag-eyebrow">Developer Integration</p>
               <h2 className="ag-section-title max-w-3xl">Wrap your trading agent in five lines.</h2>
-              <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-[var(--ag-muted)]">Install AgentGuard as a TypeScript SDK, wrap your existing execution client, and let deterministic policy checks run before any Bitget paper execution call.</p>
+              <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-[var(--ag-muted)]">Install AgentGuard from npm, wrap your existing trading agent execution client, and route order intents through deterministic policy checks before Bitget paper execution. The judge demo runs without private keys. Paper execution demos use Bitget Demo credentials and live trading is not implemented. Paper/demo execution is available through explicit demo commands.</p>
               <div className="mt-5 rounded-lg border border-[var(--ag-border-soft)] bg-[var(--ag-panel)] p-4">
                 <p className="ag-mono text-[10px] uppercase text-[var(--ag-muted)]">Install</p>
                 <div className="mt-2 space-y-1 ag-mono text-xs text-[var(--ag-text)]">
-                  <div>npm run sdk:pack</div>
-                  <div>npm install ./agentguard-sdk-0.1.0.tgz</div>
+                  <div>npm install @devendurance/agentguard-sdk</div>
                 </div>
               </div>
               <article className="ag-panel mt-8 overflow-hidden" data-code-block>
