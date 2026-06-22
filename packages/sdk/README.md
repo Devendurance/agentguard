@@ -4,13 +4,18 @@ AgentGuard is a risk firewall and middleware SDK for AI trading agents. It wraps
 
 It is built for Bitget-style trading infrastructure demos where model-generated trade intent must pass through a hard safety boundary before execution.
 
-## Install From Packed Tarball
+## Install From npm
 
 From the repository root:
 
 ```bash
-npm pack ./packages/sdk
-npm install ./agentguard-sdk-0.1.0.tgz
+npm install @devendurance/agentguard-sdk
+```
+
+For exact reproducibility:
+
+```bash
+npm install @devendurance/agentguard-sdk@0.1.1
 ```
 
 For local development in this repo, you can also import directly from `packages/sdk/src`.
@@ -45,7 +50,7 @@ import {
   type AccountState,
   type MarketState,
   type RiskPolicy,
-} from "@agentguard/sdk";
+} from "@devendurance/agentguard-sdk";
 
 const policy: RiskPolicy = {
   mode: "active",

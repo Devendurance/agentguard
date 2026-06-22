@@ -14,7 +14,7 @@ Developers need infrastructure that makes risk rules deterministic, auditable, a
 
 AgentGuard wraps an execution client with a policy engine. The agent can still generate trade intent, but AgentGuard decides whether the order is approved, resized, blocked, flattened, or paused before the execution layer receives it.
 
-The SDK is packable as `@agentguard/sdk` for local installation and demo review.
+The SDK is now published to npm as `@devendurance/agentguard-sdk`, so developers can install AgentGuard on their own machines without using a local tarball.
 
 ## How It Works
 
@@ -49,7 +49,7 @@ AgentGuard currently supports:
 - Bitget public read-only market data provider works.
 - Trading agent integration demo works.
 - Dashboard data generation works.
-- SDK packaging works through local npm packing.
+- SDK packaging still works through local npm packing for fallback or dev review.
 - Paper read-only account probe is available as an optional credential check.
 - Guarded paper order demo is available and safe by default.
 
@@ -58,12 +58,18 @@ No live trading is implemented. Paper order placement is not enabled by default.
 ## Quickstart
 
 ```bash
-npm install
+npm install @devendurance/agentguard-sdk
 npm run demo:judge
 npm run sdk:pack
 ```
 
 `demo:judge` does not require private Bitget API keys. It runs the main trading-agent dry-run demo, regenerates dashboard sample data, and builds the SDK.
+
+For exact reproducibility, you can pin the published version:
+
+```bash
+npm install @devendurance/agentguard-sdk@0.1.1
+```
 
 The SDK pack command creates:
 
@@ -71,27 +77,33 @@ The SDK pack command creates:
 agentguard-sdk-0.1.0.tgz
 ```
 
-Install the packed SDK in another project with:
+Install the published SDK in another project with:
 
 ```bash
-npm install ./agentguard-sdk-0.1.0.tgz
+npm install @devendurance/agentguard-sdk
 ```
 
 ## How Developers Use AgentGuard
 
 1. Install/build the SDK
 
-AgentGuard is currently installable from a local packed tarball.
+AgentGuard is now installable from npm on your own machine.
+
+```bash
+npm install @devendurance/agentguard-sdk
+```
+
+For exact reproducibility:
+
+```bash
+npm install @devendurance/agentguard-sdk@0.1.1
+```
+
+Local tarball install remains available for fallback or dev review:
 
 ```bash
 npm run sdk:pack
 npm install ./agentguard-sdk-0.1.0.tgz
-```
-
-Future npm package style:
-
-```bash
-npm install @agentguard/sdk
 ```
 
 2. Add a policy file
@@ -128,7 +140,7 @@ import {
   BitgetPublicMarketStateProvider,
   createAgentGuardedClient,
   loadPolicy
-} from "@agentguard/sdk";
+} from "@devendurance/agentguard-sdk";
 
 const policy = await loadPolicy("./agentguard.policy.example.json");
 const guard = new AgentGuard({ policy });
@@ -204,18 +216,24 @@ console.log(result.executionResult);
 
 ## Package Status
 
-AgentGuard is not published to npm yet.
-For this hackathon, the SDK is installable through local npm packing:
+AgentGuard is published to npm.
+For fallback or dev review, the SDK is still packable locally:
 
 ```bash
 npm run sdk:pack
 npm install ./agentguard-sdk-0.1.0.tgz
 ```
 
-Future npm release target:
+Primary npm install:
 
 ```bash
-npm install @agentguard/sdk
+npm install @devendurance/agentguard-sdk
+```
+
+Pinned npm install:
+
+```bash
+npm install @devendurance/agentguard-sdk@0.1.1
 ```
 
 ## Optional Paper Auth
