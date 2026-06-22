@@ -14,7 +14,7 @@ Developers need infrastructure that makes risk rules deterministic, auditable, a
 
 AgentGuard wraps an execution client with a policy engine. The agent can still generate trade intent, but AgentGuard decides whether the order is approved, resized, blocked, flattened, or paused before the execution layer receives it.
 
-The SDK is now published to npm as `@devendurance/agentguard-sdk`, so developers can install AgentGuard on their own machines without using a local tarball.
+AgentGuard is published as an npm package, so developers can install it directly in their own trading-agent projects.
 
 ## How It Works
 
@@ -23,7 +23,7 @@ AI agent
   -> OrderIntent
   -> AgentGuard policy check
   -> approve / resize / block / flatten / pause
-  -> dry-run or gated execution adapter
+  -> dry-run or demo execution adapter
   -> audit event log
 ```
 
@@ -49,7 +49,7 @@ AgentGuard currently supports:
 - Bitget public read-only market data provider works.
 - Trading agent integration demo works.
 - Dashboard data generation works.
-- SDK packaging still works through local npm packing for fallback or dev review.
+- SDK packaging still works for fallback or dev review.
 - Paper read-only account probe is available as an optional credential check.
 - Guarded paper order demo is available and safe by default.
 
@@ -60,7 +60,6 @@ No live trading is implemented. Paper order placement is not enabled by default.
 ```bash
 npm install @devendurance/agentguard-sdk
 npm run demo:judge
-npm run sdk:pack
 ```
 
 `demo:judge` does not require private Bitget API keys. It runs the main trading-agent dry-run demo, regenerates dashboard sample data, and builds the SDK.
@@ -71,7 +70,7 @@ For exact reproducibility, you can pin the published version:
 npm install @devendurance/agentguard-sdk@0.1.1
 ```
 
-The SDK pack command creates:
+For fallback or dev review, the SDK pack command creates:
 
 ```text
 agentguard-sdk-0.1.0.tgz
@@ -201,10 +200,11 @@ console.log(result.executionResult);
 6. Explain execution safety
 
 - dry-run is safe by default
-- Bitget paper/demo execution is gated
+- Bitget paper/demo trading only
+- judge demo does not require private keys
 - live trading is not implemented
-- paper order execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`
-- blocked orders never reach Bitget
+- paper execution demos use Bitget Demo credentials
+- blocked orders never reach execution
 
 ## Implemented Guard Actions
 
@@ -242,7 +242,7 @@ npm install @devendurance/agentguard-sdk@0.1.1
 npm run demo:paper-auth
 ```
 
-This optional probe requires Bitget Demo API keys and paper env flags. It calls a read-only paper account endpoint with `paptrading: 1`, prints only safe metadata, and does not place orders.
+This optional probe requires Bitget Demo API keys. It calls a read-only paper account endpoint with `paptrading: 1`, prints only safe metadata, and does not place orders.
 
 ## Optional Guarded Paper Order
 
@@ -250,13 +250,7 @@ This optional probe requires Bitget Demo API keys and paper env flags. It calls 
 npm run demo:paper-order-guarded
 ```
 
-The default run sends no order. It shows a safe `BTCUSDT` 3 USDT market buy reaching the paper client safety gate, while an unsafe `ETHUSDT` 20x order is blocked before execution.
-
-Intentional paper execution requires:
-
-```bash
-AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-order-guarded
-```
+The judge demo runs without private keys. This paper execution proof command uses Bitget Demo credentials and shows a safe `BTCUSDT` 3 USDT market buy reaching the paper client safety boundary, while an unsafe `ETHUSDT` 20x order is blocked before execution.
 
 If Bitget returns `43012 Insufficient balance`, the signed request still reached the Bitget demo endpoint; fund the demo spot account with paper USDT or lower the size if allowed.
 
@@ -266,23 +260,16 @@ Resize paper proof:
 npm run demo:paper-resize-guarded
 ```
 
-The default run does not place an order. It shows an oversized `SOLUSDT` market buy being resized from `$8` to `$3`, then written to `data/agentguard-paper-order-records.json` for `/dashboard`.
-
-Intentional paper execution requires:
-
-```bash
-AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-resize-guarded
-```
+The judge demo runs without private keys. This paper execution proof command uses Bitget Demo credentials and shows an oversized `SOLUSDT` market buy being resized from `$8` to `$3`, then written to `data/agentguard-paper-order-records.json` for `/dashboard`.
 
 ## Safety Guarantees
 
 - Judge demo does not require private keys.
 - Dry-run execution does not send Bitget orders.
 - Blocked orders do not reach execution.
+- Bitget paper/demo trading only.
+- Paper execution demos use Bitget Demo credentials.
 - Live trading is not implemented.
-- Paper order placement is not enabled by default.
-- Guarded paper order execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
-- Resize paper order execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
 - `/dashboard` shows appended verifiable usage records, including resize records.
 - Secrets are not printed by paper auth diagnostics.
 - `.env` files should never be committed.
@@ -294,3 +281,4 @@ AgentGuard is trading infrastructure, not a trading strategy. It gives AI tradin
 The core value is preventing unsafe autonomous execution before it reaches Bitget-style trading APIs.
 
 The hosted dashboard displays committed verifiable usage records. New paper execution records are generated locally with npm run demo:paper-order-guarded and can be committed or viewed immediately in local dev.
+

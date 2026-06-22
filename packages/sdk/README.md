@@ -25,12 +25,24 @@ For local development in this repo, you can also import directly from `packages/
 From the repository root:
 
 ```bash
-npm install
+npm install @devendurance/agentguard-sdk
 npm run demo:judge
-npm run sdk:pack
 ```
 
 `demo:judge` does not require private Bitget API keys. It runs the trading-agent dry-run demo, regenerates sample dashboard data, and builds the SDK package.
+
+For exact reproducibility:
+
+```bash
+npm install @devendurance/agentguard-sdk@0.1.1
+```
+
+For fallback or dev review, you can still pack locally:
+
+```bash
+npm run sdk:pack
+npm install ./agentguard-sdk-0.1.0.tgz
+```
 
 Paper authentication is optional:
 
@@ -38,7 +50,7 @@ Paper authentication is optional:
 npm run demo:paper-auth
 ```
 
-The paper auth probe requires Bitget Demo API keys and all paper env flags. It is read-only and does not place orders.
+The paper auth probe requires Bitget Demo API keys. It is read-only and does not place orders.
 
 ## Minimal Usage
 
@@ -104,8 +116,8 @@ console.log(result.forwarded);
 ## Safety Modes
 
 - `dry_run`: default demo execution mode. It returns Bitget-shaped payloads but does not send orders.
-- `paper`: paper/demo trading is gated and not enabled for order placement by default.
-- `live`: live trading is not implemented for this hackathon build.
+- `paper`: Bitget paper/demo trading only.
+- `live`: live trading is not implemented.
 
 AgentGuard is designed to fail closed when required account or market state is missing and `failClosed` is enabled.
 
@@ -114,7 +126,9 @@ AgentGuard is designed to fail closed when required account or market state is m
 - SDK policy loading, validation, risk decisions, guarded wrapping, and event logging work.
 - Real Bitget public market data works through the read-only public market provider.
 - Paper read-only auth probing works with Bitget demo credentials and `paptrading: 1`.
-- Execution is dry-run by default. Paper order execution is planned but remains safety-gated and is not enabled by default.
+- Execution is dry-run by default.
+- Paper execution demos use Bitget Demo credentials.
+- Paper/demo execution is available through explicit demo commands.
 - No live trading implementation is included.
 
 ## Demo Commands
@@ -136,3 +150,4 @@ npm run demo:paper-auth
 ```
 
 Use the paper account probe only with Bitget Demo API credentials and the required paper flags. Do not use live keys for paper testing.
+

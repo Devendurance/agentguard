@@ -12,9 +12,21 @@
 ## Commands
 
 ```bash
-npm install
+npm install @devendurance/agentguard-sdk
 npm run demo:judge
+```
+
+For exact reproducibility:
+
+```bash
+npm install @devendurance/agentguard-sdk@0.1.1
+```
+
+For fallback or dev review, you can still pack locally:
+
+```bash
 npm run sdk:pack
+npm install ./agentguard-sdk-0.1.0.tgz
 ```
 
 Optional read-only paper authentication check:
@@ -23,28 +35,16 @@ Optional read-only paper authentication check:
 npm run demo:paper-auth
 ```
 
-Guarded paper order demo, safe by default:
+Paper execution proof demo:
 
 ```bash
 npm run demo:paper-order-guarded
 ```
 
-Resize paper proof demo, safe by default:
+Resize paper execution proof demo:
 
 ```bash
 npm run demo:paper-resize-guarded
-```
-
-Optional intentional paper execution:
-
-```bash
-AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-order-guarded
-```
-
-Optional intentional resize execution:
-
-```bash
-AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-resize-guarded
 ```
 
 ## What The Output Proves
@@ -63,7 +63,7 @@ AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-resize-guarded
 
 `npm run sdk:pack` proves:
 
-- The SDK can be packaged as `@agentguard/sdk`.
+- The SDK can be packaged for local fallback or dev review.
 - Judges or developers can install the generated tarball locally.
 
 `npm run demo:paper-auth` proves, when credentials are available:
@@ -74,22 +74,20 @@ AGENTGUARD_EXECUTE_PAPER_ORDER=true npm run demo:paper-resize-guarded
 
 `npm run demo:paper-order-guarded` proves:
 
-- The default run sends no order.
+- The judge demo runs without private keys.
+- Paper execution demos use Bitget Demo credentials.
 - AgentGuard approves the safe `BTCUSDT` 3 USDT market buy intent.
-- The paper client refuses to send unless `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
-- AgentGuard blocks the unsafe `ETHUSDT` 200 USDT 20x order before it reaches the paper client.
+- AgentGuard blocks the unsafe `ETHUSDT` 200 USDT 20x order before it reaches execution.
 - A sanitized verifiable usage record is written to `data/agentguard-paper-order-record.json`.
-- If intentional execution returns Bitget `43012 Insufficient balance`, the signed paper order request still reached the Bitget demo endpoint; the demo spot account needs paper USDT or a lower allowed size for a full fill.
-- If intentional execution returns `code: 00000` with `orderId` or `clientOid`, the demo performs a read-only `GET /api/v2/spot/trade/orderInfo` query and prints sanitized proof fields: `code`, `msg`, `orderId`, `clientOid`, `symbol`, `side`, `orderType`, and `status`.
+- The command shows a paper/demo execution proof path separate from the no-key judge demo.
 
 `npm run demo:paper-resize-guarded` proves:
 
-- The default run sends no order.
 - AgentGuard resizes the oversized `SOLUSDT` 8 USDT market buy intent down to 3 USDT.
-- The paper client safety gate stays closed unless `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
+- Paper execution demos use Bitget Demo credentials.
 - A sanitized verifiable usage record is appended to `data/agentguard-paper-order-records.json`.
 - `/dashboard` can show the new resize usage record after refresh.
-- Intentional execution requires `AGENTGUARD_EXECUTE_PAPER_ORDER=true`.
+- The command shows a paper/demo execution proof path separate from the no-key judge demo.
 
 ## Dashboard Mention
 
@@ -101,11 +99,14 @@ Use `npm run demo:dashboard-data` directly if you only want to refresh dashboard
 
 ## SDK Install/Pack Mention
 
-The SDK lives in `packages/sdk` and is packable:
+The SDK is published on npm, and local packing remains available for fallback or dev review:
 
 ```bash
+npm install @devendurance/agentguard-sdk
+npm install @devendurance/agentguard-sdk@0.1.1
 npm run sdk:pack
 npm install ./agentguard-sdk-0.1.0.tgz
 ```
 
 This shows AgentGuard is reusable infrastructure rather than only an app demo.
+
